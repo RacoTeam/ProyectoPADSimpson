@@ -1,0 +1,147 @@
+﻿@page "/simpson"
+@inject HttpClient Http
+@inject NavigationManager _navigationManager
+
+<h3>Frases de los simpson</h3>
+
+<div>
+    <p>Nombre de personaje:</p>
+    <input type="text" @bind-value="nombrePersonaje" />
+    <p>Cuantas frase dira:</p>
+    <input type="text" @bind-value="cantidadFrase" />
+    <button @onclick="(async()=> await GenerarFrase())">Generar Frase</button>
+
+    @if (listaResultados != null)
+    {
+        @foreach (Personaje personaje in listaResultados)
+        {
+            <h4>Personaje: @personaje.character</h4>
+            <div>Frase: @personaje.quote</div>
+            <img src="@personaje.image" />
+        }
+    }
+</div>
+
+<div>
+    @if (listaEpisodios != null)
+    {
+        @foreach (Episode episodio in listaEpisodios)
+        {
+
+            <p>@episodio.episode</p>
+
+        }
+    }
+</div>
+
+
+@code {
+    List<Personaje>? listaResultados { get; set; }
+    String? nombrePersonaje { get; set; }
+    int cantidadFrase = 1;
+    ListaInfoPersonajes? listaInfoPersonaje { get; set; }
+    InfoPersonaje? infoPersonaje { get; set; }
+    Episode? episodio { get; set; }
+    ListaEpisodios? listaEpisodiosClase { get; set; }
+    List<Episode>? listaEpisodios { get; set; }
+
+
+
+    protected async Task GenerarFrase()
+    {
+        if (nombrePersonaje == null && cantidadFrase == 1)
+        {
+            listaResultados = await Http.GetFromJsonAsync<List<Personaje>>("https://thesimpsonsquoteapi.glitch.me/quotes");
+
+        }
+
+        if (nombrePersonaje != null && cantidadFrase == 1)
+        {
+            listaResultados = await Http.GetFromJsonAsync<List<Personaje>>("https://thesimpsonsquoteapi.glitch.me/quotes?character=" + nombrePersonaje);
+
+        }
+        if (nombrePersonaje == null && cantidadFrase != 1)
+        {
+            listaResultados = await Http.GetFromJsonAsync<List<Personaje>>("https://thesimpsonsquoteapi.glitch.me/quotes?count=" + cantidadFrase);
+        }
+
+        if (nombrePersonaje != null && cantidadFrase != 1)
+        {
+            listaResultados = await Http.GetFromJsonAsync<List<Personaje>>("https://thesimpsonsquoteapi.glitch.me/quotes?count=" + cantidadFrase + "&character=" + nombrePersonaje);
+        }
+        
+
+            listaEpisodios = await Http.GetFromJsonAsync<List<Episode>>("https://frinkiac.com/api/search?q=hola");
+
+
+        //foreach (var result in listaResultados)
+        //{
+        // listaEpisodios = await Http.GetFromJsonAsync<ListaEpisodios>("https://frinkiac.com/api/search?q=" + result.quote);
+        //}
+
+
+        _navigationManager.NavigateTo("simpson");
+    }
+
+    class Personaje
+    {
+        public String? quote { get; set; }
+        public String? character { get; set; }
+        public String? image { get; set; }
+        public String? characterDirection { get; set; }
+    }
+
+    public class Episode
+    {
+        public int? id { get; set; }
+        public String? episode { get; set; }
+        public int? timestamp { get; set; }
+    }
+
+    public class ListaEpisodios
+    {
+        public List<Episode>? resultEpisodios { get; set; }
+    }
+
+
+
+    //https://cors-anywhere.herokuapp.com/
+
+
+
+
+
+
+
+
+
+    //listaInfoPersonaje = await Http.GetFromJsonAsync<ListaInfoPersonajes>("https://apisimpsons.fly.dev/api/personajes/find/" + nombrePersonaje);
+
+    public class InfoPersonaje
+    {
+        public String? Nombre { get; set; }
+        public String? Historia { get; set; }
+        public String? Imagen { get; set; }
+        public String? Genero { get; set; }
+        public String? Estado { get; set; }
+        public String? Ocupacion { get; set; }
+    }
+
+    public class ListaInfoPersonajes
+    {
+        public List<InfoPersonaje>? result { get; set; }
+    }
+
+
+
+    //FILTROS: ?count=15&character=homer   ? count=num & character=nombrePersonaje
+    //https://apisimpsons.fly.dev/api/personajes/find/
+
+    //protected override async Task OnInitializedAsync()
+    //{
+    //    listaResultados = await Http.GetFromJsonAsync<List<Personaje>>("https://thesimpsonsquoteapi.glitch.me/quotes");
+    //}
+
+    //http://frinkiac.com/api/caption?e=S07E04&t=244026
+    //https://frinkiac.com/api/search?q=I%20can%27t%20even%20say%20the%20word%20%27titmouse%27%20without%20gigggling%20like%20a%20schoolgirl.
+}
