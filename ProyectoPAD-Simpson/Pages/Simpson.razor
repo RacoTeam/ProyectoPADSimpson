@@ -1,6 +1,8 @@
 ﻿@page "/simpson"
 @inject HttpClient Http
 @inject NavigationManager _navigationManager
+@inject ServicioApi ServicioApi
+@Http
 
 <h3>Frases de los simpson</h3>
 
@@ -45,14 +47,11 @@
     ListaEpisodios? listaEpisodiosClase { get; set; }
     List<Episode>? listaEpisodios { get; set; }
 
-
-
     protected async Task GenerarFrase()
     {
         if (nombrePersonaje == null && cantidadFrase == 1)
         {
             listaResultados = await Http.GetFromJsonAsync<List<Personaje>>("https://thesimpsonsquoteapi.glitch.me/quotes");
-
         }
 
         if (nombrePersonaje != null && cantidadFrase == 1)
@@ -69,16 +68,12 @@
         {
             listaResultados = await Http.GetFromJsonAsync<List<Personaje>>("https://thesimpsonsquoteapi.glitch.me/quotes?count=" + cantidadFrase + "&character=" + nombrePersonaje);
         }
-        
-
-            listaEpisodios = await Http.GetFromJsonAsync<List<Episode>>("https://frinkiac.com/api/search?q=hola");
 
 
-        //foreach (var result in listaResultados)
-        //{
-        // listaEpisodios = await Http.GetFromJsonAsync<ListaEpisodios>("https://frinkiac.com/api/search?q=" + result.quote);
-        //}
-
+        foreach (var result in listaResultados)
+        {
+            listaEpisodios = await ServicioApi.ObtenerEpisodios("https://corsproxy.io/?https://frinkiac.com/api/search?q=" + result.quote);
+        }
 
         _navigationManager.NavigateTo("simpson");
     }
@@ -103,18 +98,7 @@
         public List<Episode>? resultEpisodios { get; set; }
     }
 
-
-
     //https://cors-anywhere.herokuapp.com/
-
-
-
-
-
-
-
-
-
     //listaInfoPersonaje = await Http.GetFromJsonAsync<ListaInfoPersonajes>("https://apisimpsons.fly.dev/api/personajes/find/" + nombrePersonaje);
 
     public class InfoPersonaje
@@ -127,12 +111,10 @@
         public String? Ocupacion { get; set; }
     }
 
-    public class ListaInfoPersonajes
+    public class ListaInfoPersonajes 
     {
         public List<InfoPersonaje>? result { get; set; }
     }
-
-
 
     //FILTROS: ?count=15&character=homer   ? count=num & character=nombrePersonaje
     //https://apisimpsons.fly.dev/api/personajes/find/
