@@ -3,13 +3,13 @@
 @inject NavigationManager _navigationManager
 @inject ServicioApiEpisodios ServicioApiEpisodios
 
-<h3>Frases de los Simpsons</h3>
+<h3>Frases de los Simpson</h3>
 
 <div>
     <div>
         <h4>Buscar por Personaje</h4>
         <p>Nombre del personaje:</p>
-        <input type="text" @bind-value="nombrePersonaje" />
+        <input type="text" @bind-value="nombrePersonaje" placeholder="Bart Simpson"/>
         @if (string.IsNullOrEmpty(nombrePersonaje) && nombrePersonajeInvalido)
         {
             <p style="color: red;">Ingrese el nombre del personaje.</p>
@@ -33,21 +33,29 @@
 </div>
 
 <div>
-    @if (listaFrase != null && listaEpisodios != null)
+    @if (listaFrases != null && listaEpisodios != null)
     {
-        @for (int i = 0; i < listaFrase.Count; i++)
+        foreach (var frasesPersonaje in frasesAgrupadas)
         {
-            var personaje = listaFrase[i];
-            var episodio = listaEpisodios[i];
+            <br />
+            <h4>Personaje: @frasesPersonaje.Key</h4>
+            <img src="@frasesPersonaje.First().image" width="150" />
 
-            <div>
-                <br />
-                <h4>Personaje: @personaje.character</h4>
-                <img src="@personaje.image" width="150" />
-                <div>Frase: @personaje.quote</div>
-                <p>Episodio: @episodio.episode</p>
-                <img src=@("https://frinkiac.com/img/" + episodio.episode + "/" + episodio.timestamp) width="200" />
-            </div>
+            foreach(var frase in frasesPersonaje)
+            {
+                int index = listaFrases.IndexOf(frase);
+                Episodio episodio = listaEpisodios.ElementAtOrDefault(index);
+
+                if (episodio != null)
+                {
+                    <div>
+                        <br />
+                        <div>Frase: @frase.quote</div>
+                        <p>Episodio: @episodio.episode</p>
+                        <img src=@("https://frinkiac.com/img/" + episodio.episode + "/" + episodio.timestamp) width="200" />
+                    </div>
+                }
+            }
         }
     }
 </div>
@@ -68,7 +76,7 @@
         public int? timestamp { get; set; }
     }
 
-    List<Personaje>? listaFrase { get; set; }
+    List<Personaje>? listaFrases { get; set; }
     List<Episodio>? listaEpisodios { get; set; }
     Personaje? frase { get; set; }
 
@@ -76,6 +84,8 @@
     int cantidadFrase = 1;
     bool nombrePersonajeInvalido = false;
     bool cantidadInvalida = false;
+
+    IEnumerable<IGrouping<string?, Personaje>> frasesAgrupadas = Enumerable.Empty<IGrouping<string?, Personaje>>();
 
     protected async Task GenerarFrase()
     {
@@ -94,11 +104,11 @@
         }
         else if (cantidadFrase == 1)
         {
-            listaFrase = await Http.GetFromJsonAsync<List<Personaje>>("https://thesimpsonsquoteapi.glitch.me/quotes?character=" + nombrePersonaje);
+            listaFrases = await Http.GetFromJsonAsync<List<Personaje>>("https://thesimpsonsquoteapi.glitch.me/quotes?character=" + nombrePersonaje);
         }
         else if (cantidadFrase > 1)
         {
-            listaFrase = await Http.GetFromJsonAsync<List<Personaje>>("https://thesimpsonsquoteapi.glitch.me/quotes?count=" + cantidadFrase + "&character=" + nombrePersonaje);
+            listaFrases = await Http.GetFromJsonAsync<List<Personaje>>("https://thesimpsonsquoteapi.glitch.me/quotes?count=" + cantidadFrase + "&character=" + nombrePersonaje);
         }
 
         cantidadInvalida = false;
@@ -106,7 +116,7 @@
         // Obtengo los episodios donde aparece cada frase
         listaEpisodios = null;
 
-        foreach (var result in listaFrase)
+        foreach (var result in listaFrases)
         {
             var primerEpisodio = await ServicioApiEpisodios.ObtenerEpisodio("https://corsproxy.io/?https://frinkiac.com/api/search?q=" + result.quote);
 
@@ -121,14 +131,15 @@
                 listaEpisodios.Add(primerEpisodio);
             }
         }
+        frasesAgrupadas = listaFrases.GroupBy(q => q.character);
 
         _navigationManager.NavigateTo("simpson");
     }
 
     protected async Task GenerarFraseAleatoria()
     {
-        listaFrase = await Http.GetFromJsonAsync<List<Personaje>>("https://thesimpsonsquoteapi.glitch.me/quotes");
-        frase = listaFrase?.FirstOrDefault();
+        listaFrases = await Http.GetFromJsonAsync<List<Personaje>>("https://thesimpsonsquoteapi.glitch.me/quotes");
+        frase = listaFrases?.FirstOrDefault();
         listaEpisodios = null;
 
         if (frase != null)
@@ -146,6 +157,7 @@
                 listaEpisodios.Add(primerEpisodio);
             }
         }
+        frasesAgrupadas = listaFrases.GroupBy(q => q.character);
 
         _navigationManager.NavigateTo("simpson");
     }
