@@ -3,6 +3,11 @@
 @inject NavigationManager _navigationManager
 @inject ServicioApiEpisodios ServicioApiEpisodios
 
+@using Newtonsoft.Json;
+@using Newtonsoft.Json.Linq;
+
+<PageTitle>Frases Simpson</PageTitle>
+
 <h3>Frases de los Simpson</h3>
 
 <div>
@@ -22,22 +27,28 @@
         }
         <br />
         <br />
-        <button @onclick="(async()=> await GenerarFrase())">Generar Frase/s</button>
+        <button class="btn btn-primary" @onclick="(async()=> await GenerarFrase())">Generar Frase/s</button>
         <br />
         <br />
     </div>
     <div>
         <h4>Frase Aleatoria</h4>
-        <button @onclick="(async()=> await GenerarFraseAleatoria())">Generar Frase Aleatoria</button>
+        <button class="btn btn-primary" @onclick="(async()=> await GenerarFraseAleatoria())">Generar Frase Aleatoria</button>
     </div>
 </div>
 
 <div>
+    <div hidden="@ocultarLoader">
+        <h2 style="color: red">Cargando...</h2>
+        <img id="loader" src=@gifLoader />
+    </div>
+
     @if (frasesAgrupadas == null || !frasesAgrupadas.Any() && (busquedaBandera))
     {
         <p style="color: red;">No se encontraron personajes.</p>
     }
 
+    <div hidden="@(!ocultarLoader)">
     @if (listaFrases != null && listaEpisodios != null)
     {
         foreach (var frasesPersonaje in frasesAgrupadas)
@@ -63,6 +74,7 @@
             }
         }
     }
+    </div>
 </div>
 
 @code {
@@ -91,10 +103,32 @@
     bool cantidadInvalida = false;
     bool busquedaBandera = false;
 
+    String? gifLoader { get; set; }
+    private bool ocultarLoader { get; set; } = true;
+
     IEnumerable<IGrouping<string?, Personaje>> frasesAgrupadas = Enumerable.Empty<IGrouping<string?, Personaje>>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await ObtenerGif();
+    }
+
+    async Task ObtenerGif()
+    {
+        var response = await Http.GetStringAsync("https://api.giphy.com/v1/gifs/search?api_key=FAp8LREU0hvkH0DdmwSu2T2qcqUB12hl&q=the+simpsons&limit=1&offset=0&rating=g&lang=es&bundle=messaging_non_clips");
+        Console.WriteLine("Buscando Gif");
+        if (response != null)
+        {
+            var data = (JObject)JsonConvert.DeserializeObject(response);
+            gifLoader = data.SelectToken(
+               "data[0].images.original.url").Value<string>();
+        }
+    }
 
     protected async Task GenerarFrase()
     {
+        ocultarLoader = false;
+
         // Reviso que las entradas tengan valor y no esten vacias
         if (nombrePersonaje == null)
         {
@@ -142,7 +176,10 @@
                 listaEpisodios.Add(primerEpisodio);
             }
         }
+        
         frasesAgrupadas = listaFrases.GroupBy(q => q.character);
+        
+        ocultarLoader = true;
 
         _navigationManager.NavigateTo("simpson");
     }
