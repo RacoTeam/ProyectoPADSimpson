@@ -33,6 +33,11 @@
 </div>
 
 <div>
+    @if (frasesAgrupadas == null || !frasesAgrupadas.Any() && (busquedaBandera))
+    {
+        <p style="color: red;">No se encontraron personajes.</p>
+    }
+
     @if (listaFrases != null && listaEpisodios != null)
     {
         foreach (var frasesPersonaje in frasesAgrupadas)
@@ -84,6 +89,7 @@
     int cantidadFrase = 1;
     bool nombrePersonajeInvalido = false;
     bool cantidadInvalida = false;
+    bool busquedaBandera = false;
 
     IEnumerable<IGrouping<string?, Personaje>> frasesAgrupadas = Enumerable.Empty<IGrouping<string?, Personaje>>();
 
@@ -112,6 +118,11 @@
         }
 
         cantidadInvalida = false;
+
+        // Limpio el input
+        nombrePersonaje = null;
+
+        busquedaBandera = true;
 
         // Obtengo los episodios donde aparece cada frase
         listaEpisodios = null;
