@@ -6,24 +6,46 @@
 @using Newtonsoft.Json;
 @using Newtonsoft.Json.Linq;
 
+<style>
+    @@font-face {
+        font-family: 'Simpsonfont';
+        font-style: normal;
+        font-weight: 400;
+        src: local('Simpsonfont'), url('https://fonts.cdnfonts.com/s/92634/Simpsonfont DEMO.woff') format('woff');
+    }
+
+    .Title {
+        font-family: 'Simpsonfont';
+        text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+        color: #FFD700;
+    }
+
+    /*.Form, .Results {
+        font-family: 'Simpsonfont';
+    } */
+
+    .Error {
+        color: red;
+    }
+</style>
+
 <PageTitle>Frases Simpson</PageTitle>
 
-<h3>Frases de los Simpson</h3>
-
-<div>
+<div class="Form">
+    <h3 class="Title">Frases de los Simpson</h3>
     <div>
-        <h4>Buscar por Personaje</h4>
+        <h4 class="Title">Buscar por Personaje</h4>
         <p>Nombre del personaje:</p>
         <input type="text" @bind-value="nombrePersonaje" placeholder="Bart Simpson"/>
         @if (string.IsNullOrEmpty(nombrePersonaje) && nombrePersonajeInvalido)
         {
-            <p style="color: red;">Ingrese el nombre del personaje.</p>
+            <p class="Error">Ingrese el nombre del personaje.</p>
         }
         <p>Cantidad a mostrar:</p>
         <input type="text" @bind-value="cantidadFrase" />
         @if (cantidadInvalida)
         {
-            <p style="color: red;">Busque una frase o más.</p>
+            <p class="Error">Busque una frase o más.</p>
         }
         <br />
         <br />
@@ -32,20 +54,20 @@
         <br />
     </div>
     <div>
-        <h4>Frase Aleatoria</h4>
+        <h4 class="Title">Frase Aleatoria</h4>
         <button class="btn btn-primary" @onclick="(async()=> await GenerarFraseAleatoria())">Generar Frase Aleatoria</button>
     </div>
 </div>
 
-<div>
+<div class="Results">
     <div hidden="@ocultarLoader">
-        <h2 style="color: red">Cargando...</h2>
+        <h2 class="Title">Cargando...</h2>
         <img id="loader" src=@gifLoader />
     </div>
 
     @if (frasesAgrupadas == null || !frasesAgrupadas.Any() && (busquedaBandera))
     {
-        <p style="color: red;">No se encontraron personajes.</p>
+        <p>No se encontraron personajes.</p>
     }
 
     <div hidden="@(!ocultarLoader)">
@@ -115,20 +137,17 @@
 
     async Task ObtenerGif()
     {
-        var response = await Http.GetStringAsync("https://api.giphy.com/v1/gifs/search?api_key=FAp8LREU0hvkH0DdmwSu2T2qcqUB12hl&q=the+simpsons&limit=1&offset=0&rating=g&lang=es&bundle=messaging_non_clips");
-        Console.WriteLine("Buscando Gif");
+        var response = await Http.GetStringAsync("https://api.giphy.com/v1/gifs/random?api_key=FAp8LREU0hvkH0DdmwSu2T2qcqUB12hl&tag=los+simpsons&rating=g");
         if (response != null)
         {
             var data = (JObject)JsonConvert.DeserializeObject(response);
             gifLoader = data.SelectToken(
-               "data[0].images.original.url").Value<string>();
+               "data.images.original.url").Value<string>();
         }
     }
 
     protected async Task GenerarFrase()
     {
-        ocultarLoader = false;
-
         // Reviso que las entradas tengan valor y no esten vacias
         if (nombrePersonaje == null)
         {
@@ -136,6 +155,8 @@
             return;
         }
         nombrePersonajeInvalido = false;
+
+        ocultarLoader = false;
 
         if (cantidadFrase == 0)
         {
@@ -186,6 +207,8 @@
 
     protected async Task GenerarFraseAleatoria()
     {
+        ocultarLoader = false;
+
         listaFrases = await Http.GetFromJsonAsync<List<Personaje>>("https://thesimpsonsquoteapi.glitch.me/quotes");
         frase = listaFrases?.FirstOrDefault();
         listaEpisodios = null;
@@ -206,6 +229,8 @@
             }
         }
         frasesAgrupadas = listaFrases.GroupBy(q => q.character);
+
+        ocultarLoader = true;
 
         _navigationManager.NavigateTo("simpson");
     }
