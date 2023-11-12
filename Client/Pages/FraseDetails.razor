@@ -1,0 +1,93 @@
+﻿@page "/fetchfrasedetails"
+@using ProyectoPADSimpson.Shared.Models;
+@inject HttpClient Http
+
+<h1>Frases Favoritas</h1>
+<p>Aquí puedes ver tus frases guardadas y eliminarlas.</p>
+<div class="row">
+    <div class="input-group col">
+        <input type="text" class="form-control" placeholder="Buscar frase por texto"
+        @bind="SearchString" @bind:event="oninput" @onkeyup="FilterFrase" />
+        @if (SearchString.Length > 0)
+        {
+            <div class="input-group-append">
+                <button class="btn btn-danger" @onclick="ResetSearch">
+                    <i class="bi bi-x"></i>
+                </button>
+            </div>
+        }
+    </div>
+</div>
+<br />
+
+@if (FraseList == null)
+{
+    <p><em>Cargando...</em></p>
+}
+else
+{
+    <table class="table table-striped align-middle table-bordered">
+        <thead class="table-success">
+            <tr>
+                <th>Frase</th>
+                <th>Capítulo</th>
+                <th>Usuario</th>
+                <th>Acción</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var Frase in FraseList)
+            {
+                <tr>
+                    <td>@Frase.Texto</td>
+                    <td>@Frase.Capitulo</td>
+                    <td>@Frase.IdUsuario</td>
+                    <td>
+                        <a href='/Frase/delete/@Frase.Id' class="btn btn-outline-danger" role="button">
+                            Eliminar
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+
+    </table>
+}
+
+@code {
+    protected List<Frase> FraseList = new();
+    protected List<Frase> searchFraseData = new();
+    protected Frase Frase = new();
+    protected string SearchString { get; set; } = string.Empty;
+    protected override async Task OnInitializedAsync()
+    {
+        await GetFrase();
+    }
+    protected async Task GetFrase()
+    {
+        FraseList = await Http.GetFromJsonAsync<List<Frase>>("api/Frase");
+        searchFraseData = FraseList;
+    }
+    protected void FilterFrase()
+    {
+        if (!string.IsNullOrEmpty(SearchString))
+        {
+            FraseList = searchFraseData
+                .Where(x => x.Texto.IndexOf(SearchString, StringComparison.OrdinalIgnoreCase) != -1)
+                .ToList();
+        }
+        else
+        {
+            FraseList = searchFraseData;
+        }
+    }
+    protected void DeleteConfirm(int FraseID)
+    {
+        Frase = FraseList.FirstOrDefault(x => x.Id == FraseID);
+    }
+    public void ResetSearch()
+    {
+        SearchString = string.Empty;
+        FraseList = searchFraseData;
+    }
+}
