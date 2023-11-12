@@ -1,0 +1,48 @@
+﻿@font-face {
+    font-family: 'Simpsonfont';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Simpsonfont'), url('https://fonts.cdnfonts.com/s/92634/Simpsonfont DEMO.woff') format('woff');
+}
+
+.main {
+    color: white;
+    font-family: 'Simpsonfont', sans-serif;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+.Title {
+    font-family: 'Simpsonfont';
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+    color: #FFD700;
+}
+
+.Error {
+    color: red;
+}
+
+
+.Form, .Results {
+    margin: 20px;
+}
+
+.btn {
+    background-color: #FFD700;
+    color: #3498db;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+#loader {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto; /* Esto centra la imagen horizontalmente */
+}
+
+#textResultado {
+    color: white;
+}
