@@ -58,6 +58,10 @@
         display: block;
         margin: 0 auto; /* Esto centra la imagen horizontalmente */
     }
+
+    #textResultado {
+        color: white;
+    }
     
 </style>
 
@@ -120,8 +124,10 @@
                 {
                     <div>
                         <br />
-                        <div>Frase: @frase.quote</div>
-                        <p>Episodio: @episodio.episode</p>
+
+                            <div>Frase: </div> <p id="textResultado">@frase.quote</p>
+                            <div>Episodio: </div> <p id="textResultado">@episodio.episode</p>
+   
                         <img src=@("https://frinkiac.com/img/" + episodio.episode + "/" + episodio.timestamp) width="200" />
                     </div>
                 }
