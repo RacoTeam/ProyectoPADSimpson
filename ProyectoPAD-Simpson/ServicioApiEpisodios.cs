@@ -2,7 +2,7 @@
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
-using static ProyectoPAD_Simpson.Pages.Simpson;
+using static ProyectoPADSimpson.Pages.Simpson;
 
 public class ServicioApiEpisodios
 {
