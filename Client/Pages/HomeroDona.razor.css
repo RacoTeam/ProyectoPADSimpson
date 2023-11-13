@@ -1,0 +1,42 @@
+﻿#homero-componente {
+    background-color: #2980b9;
+    height: 700px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    overflow: hidden;
+    width: 100%;
+    border-radius: 10px;
+    cursor: none;
+}
+
+.homer {
+    margin: 0 auto;
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    width: 300px;
+}
+
+#cursor {
+    height: 100px;
+    width: 100px;
+    position: absolute;
+    backface-visibility: hidden;
+    z-index: 9999999;
+    pointer-events: none; /* pointer-events: none is needed */
+    cursor: none;
+}
+
+/*#homero-component:hover #donut {
+    background-image: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/341817/homer_donut.svg);
+    background-size: cover;
+    height: 50px;
+    width: 50px;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    cursor: none;
+}
+
+#componente:not(:hover) #donut {
+    cursor: auto;*/ /* Restaurar el cursor a su estado normal */
+/*}*/

@@ -1,0 +1,20 @@
+﻿#Title {
+    color: #FFD700;
+}
+
+p {
+    color: #FFD700;
+}
+
+h4 {
+    color: #FFD700;
+}
+
+.list-group-item {
+    background-color: #FFD700;
+    color: #000;
+}
+
+li > a {
+    color: #000;
+}

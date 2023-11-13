@@ -1,0 +1,32 @@
+﻿
+<div id="componente">
+    <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/341817/homer_donut.svg" id="cursor" hidden />
+    <div id="homero-componente" onmouseenter="cursor.hidden = false" onmouseleave="cursor.hidden = true">
+        <img id="homer" class="homer" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/341817/homer_top-left.svg" alt="" />
+    </div>
+</div>
+
+@inject IJSRuntime JSRuntime
+@implements IAsyncDisposable
+
+@code {
+    private Task<IJSObjectReference> _module;
+
+    private Task<IJSObjectReference> Module => _module ??= JSRuntime.InvokeAsync<IJSObjectReference>("import", "/Pages/HomeroDona.razor.js").AsTask();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        var module = await Module;
+        await module.InvokeVoidAsync("initializeHomerDonut");
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_module != null)
+        {
+            var module = await _module;
+            await module.DisposeAsync();
+        }
+    }
+}

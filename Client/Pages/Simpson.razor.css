@@ -1,11 +1,4 @@
-﻿@font-face {
-    font-family: 'Simpsonfont';
-    font-style: normal;
-    font-weight: 400;
-    src: local('Simpsonfont'), url('https://fonts.cdnfonts.com/s/92634/Simpsonfont DEMO.woff') format('woff');
-}
-
-.main {
+﻿.main {
     color: white;
     font-family: 'Simpsonfont', sans-serif;
     text-align: center;
