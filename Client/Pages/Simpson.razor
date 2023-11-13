@@ -8,6 +8,12 @@
 
 <PageTitle>Frases Simpsons</PageTitle>
 
+<style>
+    body {
+        background-color: #3498db;
+    }
+</style>
+
 <div class="main">
     <div class="Form">
         <h3 class="Title">Frases de los Simpsons</h3>
@@ -66,10 +72,8 @@
                     {
                         <div>
                             <br />
-
                                 <div>Frase: </div> <p id="textResultado">@frase.quote</p>
-                                <div>Episodio: </div> <p id="textResultado">@episodio.episode</p>
-   
+                                <div>Episodio: </div> <p id="textResultado">@episodio.episode</p>   
                             <img src=@("https://frinkiac.com/img/" + episodio.episode + "/" + episodio.timestamp) width="200" />
                         </div>
                     }
