@@ -15,7 +15,21 @@
 </head>
 
 <body>
-    <div id="app">Cargando...</div>
+    <div id="app">
+        <div style="position: absolute; width: 100%; text-align: center; height: 100%;
+       font-family: 'Simpsonfont'; text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black; color: #FFD700;
+       background: rgb(9,141,227);
+       background: linear-gradient(180deg, rgba(9,141,227,1) 0%, rgba(91,160,187,1) 100%);
+">
+            <div style="position: absolute; top: 30vh; width: 100%; text-align: center;">
+                <h1 style="font-size: 50px">Frases Simpsonianas</h1>
+                <div style="display: flex; flex-direction: column; gap: 10px; justify-content: center; align-items: center">
+                    <p style="font-size: 30px">La aplicación esta cargando...</p>
+                    <div class="spinner-border text-warning" role="status"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div id="blazor-error-ui">
         Se produjo un error no controlado.
