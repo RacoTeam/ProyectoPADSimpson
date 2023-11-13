@@ -1,9 +1,10 @@
 ﻿.main {
-    color: white;
     font-family: 'Simpsonfont', sans-serif;
     text-align: center;
     margin: 0;
     padding: 0;
+    height: 100%;
+    width: 100%
 }
 
 .Title {
@@ -38,3 +39,5 @@
 #textResultado {
     color: white;
 }
+
+

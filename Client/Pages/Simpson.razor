@@ -6,11 +6,12 @@
 @using Newtonsoft.Json;
 @using Newtonsoft.Json.Linq;
 
-<PageTitle>Frases Simpsons</PageTitle>
+<PageTitle>Buscador de Frases</PageTitle>
 
 <style>
     body {
-        background-color: #3498db;
+        background: rgb(9,141,227);
+        background: linear-gradient(180deg, rgba(9,141,227,1) 0%, rgba(91,160,187,1) 100%);
     }
 </style>
 
@@ -46,7 +47,7 @@
     <div class="Results">
         <div hidden="@ocultarLoader">
             <h2 class="Title">Cargando...</h2>
-            <img id="loader" src=@gifLoader />
+            <img id="loader" src="@gifLoader" />
         </div>
 
         @if (frasesAgrupadas == null || !frasesAgrupadas.Any() && (busquedaBandera))
@@ -55,31 +56,37 @@
         }
 
         <div hidden="@(!ocultarLoader)">
-        @if (listaFrases != null && listaEpisodios != null)
-        {
-            foreach (var frasesPersonaje in frasesAgrupadas)
+            @if (listaFrases != null && listaEpisodios != null)
             {
-                <br />
-                <h4>Personaje: @frasesPersonaje.Key</h4>
-                <img src="@frasesPersonaje.First().image" width="150" />
-
-                foreach(var frase in frasesPersonaje)
+                @foreach (var frasesPersonaje in frasesAgrupadas)
                 {
-                    int index = listaFrases.IndexOf(frase);
-                    Episodio episodio = listaEpisodios.ElementAtOrDefault(index);
+                    <div>
+                        <h4>Personaje: @frasesPersonaje.Key</h4>
+                        <img src="@frasesPersonaje.First().image" width="100" style="margin: 10px;" />
 
-                    if (episodio != null)
-                    {
-                        <div>
-                            <br />
-                                <div>Frase: </div> <p id="textResultado">@frase.quote</p>
-                                <div>Episodio: </div> <p id="textResultado">@episodio.episode</p>   
-                            <img src=@("https://frinkiac.com/img/" + episodio.episode + "/" + episodio.timestamp) width="200" />
+                        <div class="row">
+                            @foreach (var frase in frasesPersonaje)
+                            {
+                                int index = listaFrases.IndexOf(frase);
+                                Episodio episodio = listaEpisodios.ElementAtOrDefault(index);
+
+                                if (episodio != null)
+                                {
+                                    <div class="col-md-4">
+                                        <div class="card" style="margin: 10px;">
+                                            <div class="card-body">
+                                                <p class="card-text">Frase: @frase.quote</p>
+                                                <button type="button" class="btn btn-warning"><i class="bi bi-star"></i></button>
+                                            </div>
+                                            <img src="@("https://frinkiac.com/img/" + episodio.episode + "/" + episodio.timestamp)" class="card-img-bottom" alt="Episodio" style="object-fit: cover;">
+                                        </div>
+                                    </div>
+                                }
+                            }
                         </div>
-                    }
+                    </div>
                 }
             }
-        }
         </div>
     </div>
 </div>
