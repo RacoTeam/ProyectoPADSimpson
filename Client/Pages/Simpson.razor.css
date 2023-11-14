@@ -1,11 +1,33 @@
 ﻿.main {
-    font-family: 'Simpsonfont', sans-serif;
+    color: white;
     text-align: center;
     margin: 0;
     padding: 0;
     height: 100%;
     width: 100%
 }
+
+p {
+    margin: 0;
+}
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.input-container,
+.error-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+    .error-container > * {
+        margin-left: 3px;
+        margin-right: 3px;
+    }
 
 .Title {
     font-family: 'Simpsonfont';
@@ -14,19 +36,21 @@
 }
 
 .Error {
-    color: red;
+    color: #FFD700;
 }
 
-.Form, .Results {
-    margin: 20px;
+.form-container, .results-container {
+    color: black;
 }
 
 .btn {
     background-color: #FFD700;
+    font-weight: bold;
     color: #3498db;
     padding: 10px;
     border: none;
     cursor: pointer;
+    margin-bottom: 10px;
 }
 
 #loader {
@@ -34,10 +58,6 @@
     height: auto;
     display: block;
     margin: 0 auto; /* Esto centra la imagen horizontalmente */
-}
-
-#textResultado {
-    color: white;
 }
 
 

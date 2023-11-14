@@ -16,27 +16,38 @@
 </style>
 
 <div class="main">
-    <div class="Form">
-        <h3 class="Title">Frases de los Simpsons</h3>
+    <h3 class="Title">Frases de los Simpsons</h3>
+    <div class="form-container">
         <div>
             <h4 class="Title">Buscar por Personaje</h4>
-            <p>Nombre del personaje:</p>
-            <input type="text" @bind-value="nombrePersonaje" placeholder="Bart Simpson"/>
+            <div class="input-container">
+                <p>Nombre del personaje:</p>
+            </div>
+            <div class="input-container">
+                <input type="text" @bind-value="nombrePersonaje" placeholder="Bart Simpson" />
+            </div>
             @if (string.IsNullOrEmpty(nombrePersonaje) && nombrePersonajeInvalido)
             {
-                <p class="Error">Ingrese el nombre del personaje.</p>
+                <div class="error-container">
+                    <i class="bi bi-exclamation-circle-fill Error"></i>
+                    <p class="Error">Ingrese el nombre del personaje.</p>
+                </div>
             }
-            <p>Cantidad a mostrar:</p>
-            <input type="text" @bind-value="cantidadFrase" />
+            <div class="input-container">
+                <p>Cantidad a mostrar:</p>
+            </div>
+            <div class="input-container">
+                <input type="text" @bind-value="cantidadFrase" />
+            </div>
             @if (cantidadInvalida)
             {
-                <p class="Error">Busque una frase o más.</p>
+                <div class="error-container">
+                    <i class="bi bi-exclamation-circle-fill Error"></i>
+                    <p class="Error">Ingrese el nombre del personaje.</p>
+                </div>
             }
             <br />
-            <br />
             <button class="btn btn-primary" @onclick="(async()=> await GenerarFrase())">Generar Frase/s</button>
-            <br />
-            <br />
         </div>
         <div>
             <h4 class="Title">Frase Aleatoria</h4>
@@ -44,7 +55,7 @@
         </div>
     </div>
 
-    <div class="Results">
+    <div class="results-container">
         <div hidden="@ocultarLoader">
             <h2 class="Title">Cargando...</h2>
             <img id="loader" src="@gifLoader" />
@@ -61,8 +72,8 @@
                 @foreach (var frasesPersonaje in frasesAgrupadas)
                 {
                     <div>
-                        <h4>Personaje: @frasesPersonaje.Key</h4>
-                        <img src="@frasesPersonaje.First().image" width="100" style="margin: 10px;" />
+                        <h4 class="Title">@frasesPersonaje.Key</h4>
+                        <img src="@frasesPersonaje.First().image" width="75" style="margin: 10px;" />
 
                         <div class="row">
                             @foreach (var frase in frasesPersonaje)
@@ -73,12 +84,12 @@
                                 if (episodio != null)
                                 {
                                     <div class="col-md-4">
-                                        <div class="card" style="margin: 10px;">
+                                        <div class="card" style="margin: 50px;">
+                                            <img src="@("https://frinkiac.com/img/" + episodio.episode + "/" + episodio.timestamp)" class="card-img-top" alt="Episodio" style="object-fit: cover;">
                                             <div class="card-body">
-                                                <p class="card-text">Frase: @frase.quote</p>
+                                                <p class="card-text">@frase.quote</p>
                                                 <button type="button" class="btn btn-warning"><i class="bi bi-star"></i></button>
                                             </div>
-                                            <img src="@("https://frinkiac.com/img/" + episodio.episode + "/" + episodio.timestamp)" class="card-img-bottom" alt="Episodio" style="object-fit: cover;">
                                         </div>
                                     </div>
                                 }
@@ -148,8 +159,6 @@
         }
         nombrePersonajeInvalido = false;
 
-        ocultarLoader = false;
-
         if (cantidadFrase == 0)
         {
             cantidadInvalida = true;
@@ -163,8 +172,9 @@
         {
             listaFrases = await Http.GetFromJsonAsync<List<Personaje>>("https://thesimpsonsquoteapi.glitch.me/quotes?count=" + cantidadFrase + "&character=" + nombrePersonaje);
         }
-
         cantidadInvalida = false;
+        
+        ocultarLoader = false;
 
         // Limpio el input
         nombrePersonaje = null;
