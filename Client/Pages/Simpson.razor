@@ -16,16 +16,17 @@
 </style>
 
 <div class="main">
-    <h3 class="Title">Frases de los Simpsons</h3>
+    <h3 id="page-title">Frases de los Simpsons</h3>
     <div class="form-container">
         <div>
-            <h4 class="Title">Buscar por Personaje</h4>
-            <div class="input-container">
-                <p>Nombre del personaje:</p>
+            <h4 class="section-title">Buscar por Personaje</h4>
+
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="floatingInput" @bind-value="nombrePersonaje" placeholder="Bart Simpson">
+                <label for="floatingInput">Nombre del personaje</label>
             </div>
-            <div class="input-container">
-                <input type="text" @bind-value="nombrePersonaje" placeholder="Bart Simpson" />
-            </div>
+
+
             @if (string.IsNullOrEmpty(nombrePersonaje) && nombrePersonajeInvalido)
             {
                 <div class="error-container">
@@ -33,11 +34,10 @@
                     <p class="Error">Ingrese el nombre del personaje.</p>
                 </div>
             }
-            <div class="input-container">
-                <p>Cantidad a mostrar:</p>
-            </div>
-            <div class="input-container">
-                <input type="text" @bind-value="cantidadFrase" />
+
+            <div class="form-floating mb-3">
+                <input type="number" class="form-control" id="floatingInput" @bind-value="cantidadFrase" placeholder="1">
+                <label for="floatingInput">Cantidad de frases</label>
             </div>
             @if (cantidadInvalida)
             {
@@ -50,29 +50,29 @@
             <button class="btn btn-primary" @onclick="(async()=> await GenerarFrase())">Generar Frase/s</button>
         </div>
         <div>
-            <h4 class="Title">Frase Aleatoria</h4>
+            <h4 class="section-title">Frase Aleatoria</h4>
             <button class="btn btn-primary" @onclick="(async()=> await GenerarFraseAleatoria())">Generar Frase Aleatoria</button>
         </div>
     </div>
 
-    <div class="results-container">
-        <div hidden="@ocultarLoader">
-            <h2 class="Title">Cargando...</h2>
-            <img id="loader" src="@gifLoader" />
-        </div>
+    <div hidden="@ocultarLoader">
+        <h2 class="section-title">Cargando...</h2>
+        <img id="loader" src="@gifLoader" />
+    </div>
 
+    <div class="results-container" hidden="@(!ocultarLoader || primerInicio)">
         @if (frasesAgrupadas == null || !frasesAgrupadas.Any() && (busquedaBandera))
         {
-            <p>No se encontraron personajes.</p>
+            <p class="Error">No se encontraron personajes.</p>
         }
 
-        <div hidden="@(!ocultarLoader)">
+        <div>
             @if (listaFrases != null && listaEpisodios != null)
             {
                 @foreach (var frasesPersonaje in frasesAgrupadas)
                 {
                     <div>
-                        <h4 class="Title">@frasesPersonaje.Key</h4>
+                        <h4 id="nombre-personaje">@frasesPersonaje.Key</h4>
                         <img src="@frasesPersonaje.First().image" width="100" style="margin: 10px;" />
 
                         <div class="row">
@@ -130,6 +130,7 @@
 
     String? gifLoader { get; set; }
     private bool ocultarLoader { get; set; } = true;
+    private bool primerInicio { get; set; } = true;
 
     IEnumerable<IGrouping<string?, Personaje>> frasesAgrupadas = Enumerable.Empty<IGrouping<string?, Personaje>>();
 
@@ -164,7 +165,10 @@
             cantidadInvalida = true;
             return;
         }
-        else if (cantidadFrase == 1)
+
+        ocultarLoader = false;
+
+        if (cantidadFrase == 1)
         {
             listaFrases = await Http.GetFromJsonAsync<List<Personaje>>("https://thesimpsonsquoteapi.glitch.me/quotes?character=" + nombrePersonaje);
         }
@@ -173,8 +177,6 @@
             listaFrases = await Http.GetFromJsonAsync<List<Personaje>>("https://thesimpsonsquoteapi.glitch.me/quotes?count=" + cantidadFrase + "&character=" + nombrePersonaje);
         }
         cantidadInvalida = false;
-        
-        ocultarLoader = false;
 
         // Limpio el input
         nombrePersonaje = null;
@@ -203,6 +205,7 @@
         frasesAgrupadas = listaFrases.GroupBy(q => q.character);
         
         ocultarLoader = true;
+        primerInicio = false;
 
         _navigationManager.NavigateTo("simpson");
     }
@@ -233,6 +236,7 @@
         frasesAgrupadas = listaFrases.GroupBy(q => q.character);
 
         ocultarLoader = true;
+        primerInicio = false;
 
         _navigationManager.NavigateTo("simpson");
     }

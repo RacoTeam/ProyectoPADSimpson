@@ -29,18 +29,40 @@ p {
         margin-right: 3px;
     }
 
-.Title {
-    font-family: 'Simpsonfont';
-    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
-    color: #FFD700;
-}
-
 .Error {
     color: #FFD700;
 }
 
 .form-container, .results-container {
     color: black;
+}
+
+.results-container {
+    margin: 20px;
+    padding: 20px;
+    border: dashed #FFD700 2px;
+    border-radius: 20px;
+}
+
+#page-title {
+    font-family: 'Simpsonfont';
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+    color: #FFD700;
+    font-size: 35px
+}
+
+.section-title {
+    font-family: 'Simpsonfont';
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+    color: #FFD700;
+    font-size: 30px
+}
+
+#nombre-personaje {
+    font-family: 'Simpsonfont';
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+    color: #FFD700;
+    font-size: 20px;
 }
 
 .btn {
