@@ -1,8 +1,12 @@
 ﻿@page "/registrarse"
+
 @using ProyectoPADSimpson.Shared.Models;
 
-@inject NavigationManager _navServicio
+@inject HttpClient Http
 
+@inject IUsuarioServicio _usuarioServicio
+@inject NavigationManager _navServicio
+@inject IToastService toastServicio
 
  <div class="container">
     <div class="row justify-content-center">
@@ -11,7 +15,8 @@
                 <div class="card-header"><h3 class="text-center font-weight-light my-4">Crear Cuenta</h3></div>
                 <div class="card-body">
 
-                        <DataAnnotationsValidator></DataAnnotationsValidator>
+
+                    <EditForm Model="modelo" OnValidSubmit="GuardarCambios">
 
                         <div class="form-floating mb-3">
                             <input class="form-control" id="inputEmail" type="text" placeholder="name@example.com" @bind-value="modelo.Username" autocomplete="off" />
@@ -35,6 +40,8 @@
                         <div class="mt-4 mb-0">
                             <div class="d-grid"><button class="btn btn-primary btn-block" type="submit">Registrarse</button></div>
                         </div>
+                    </EditForm>
+
 
                 </div>
                 <div class="card-footer text-center py-3">
@@ -47,4 +54,26 @@
 
 @code {
     private Usuario modelo = new Usuario();
+
+    private async Task GuardarCambios()
+    {
+        if (modelo.Password != modelo.ConfirmPassword)
+        {
+            toastServicio.ShowWarning("Las contraseñas no coincides");
+            return;
+        }
+
+
+        var response = await _usuarioServicio.Crear(modelo);
+
+        if (!(response is null))
+        {
+            toastServicio.ShowSuccess("Su cuenta ha sido creada");
+            _navServicio.NavigateTo("/login");
+        }
+        else
+        {
+            toastServicio.ShowError("No se pudo crear su cuenta, intente mas tarde");
+        }
+    }
 }
