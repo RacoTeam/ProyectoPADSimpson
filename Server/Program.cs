@@ -19,6 +19,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 );
 
 builder.Services.AddTransient<IFraseServicio, FraseServicio>();
+builder.Services.AddTransient<IUsuarioServicio, UsuarioServicio>();
+
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 

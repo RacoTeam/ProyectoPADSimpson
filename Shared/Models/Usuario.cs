@@ -6,11 +6,11 @@ namespace ProyectoPADSimpson.Shared.Models
     {
         [Key]
         public int Id { get; set; }
-        [Required]
+        [Required(ErrorMessage = "El campo {0} es requerido")]
         public string Username { get; set; }
-        [Required]
+        [Required(ErrorMessage = "El campo {0} es requerido")]
         public string Password { get; set; }
-        [Required]
+        [Required(ErrorMessage = "El campo {0} es requerido")]
         public string ConfirmPassword { get; set; }
     }
 }

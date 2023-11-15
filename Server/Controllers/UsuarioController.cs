@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProyectoPADSimpson.Shared.Models;
+using ProyectoPADSimpson.Shared;
+using System.Diagnostics;
 
 namespace ProyectoPADSimpson.Server.Controllers
 {
@@ -26,6 +28,7 @@ namespace ProyectoPADSimpson.Server.Controllers
         }
 
 
+
         [HttpGet]
         [Route("{id}")]
         public async Task<ActionResult<List<Usuario>>> GetSingleUsuario(int id)
@@ -38,13 +41,52 @@ namespace ProyectoPADSimpson.Server.Controllers
 
             return Ok(miobjeto);
         }
-        [HttpPost]
 
-        public async Task<ActionResult<Usuario>> CreateUsuario(Usuario objeto)
+
+        [HttpPost("Crear")]
+        public async Task<ActionResult<Usuario>> Crear([FromBody] Usuario objeto)
         {
 
             _context.Usuarios.Add(objeto);
             await _context.SaveChangesAsync();
+            return Ok(await GetDbUsuario());
+        }
+
+        //Me quede aca
+        [HttpPost("Guardar")]
+        public async Task<ActionResult> Guardar(Usuario objeto)
+        {
+            var responseApi = new ResponseAPI<int>();
+            try
+            {
+                var dbUsuario = new Usuario
+                {
+                    Username = objeto.Username,
+                    Password = objeto.Password,
+                };
+
+                _context.Usuarios.Add(objeto);
+                await _context.SaveChangesAsync();
+
+                if(dbUsuario.Id != 0)
+                {
+                    responseApi.esCorrecto = true;
+                    responseApi.Valor = dbUsuario.Id;
+                }
+                else
+                {
+                    responseApi.esCorrecto = false;
+                    responseApi.Mensaje = "No guardado";
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+            
+            
             return Ok(await GetDbUsuario());
         }
 
