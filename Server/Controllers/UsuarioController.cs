@@ -21,13 +21,6 @@ namespace ProyectoPADSimpson.Server.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<UsuarioDTO>>> GetUsuario()
-        {
-            var lista = await _context.Usuarios.ToListAsync();
-            return Ok(lista);
-        }
-
-        [HttpGet]
         [Route("{id}")]
         public async Task<ActionResult<List<UsuarioDTO>>> GetSingleUsuario(int id)
         {
@@ -39,15 +32,6 @@ namespace ProyectoPADSimpson.Server.Controllers
 
             return Ok(miobjeto);
         }
-
-        //[HttpPost("Crear")]
-        //public async Task<ActionResult<UsuarioDTO>> Crear([FromBody] UsuarioDTO objeto)
-        //{
-
-        //    _context.Usuarios.Add(objeto);
-        //    await _context.SaveChangesAsync();
-        //    return Ok(await GetDbUsuario());
-        //}
 
         [HttpPost]
         public async Task<ActionResult> Guardar(UsuarioDTO usuario)
@@ -64,7 +48,7 @@ namespace ProyectoPADSimpson.Server.Controllers
                 _context.Usuarios.Add(dbUsuario);
                 await _context.SaveChangesAsync();
 
-                if(dbUsuario.Id != 0)
+                if (dbUsuario.Id != 0)
                 {
                     responseApi.EsCorrecto = true;
                     responseApi.Valor = dbUsuario.Id;
@@ -82,36 +66,5 @@ namespace ProyectoPADSimpson.Server.Controllers
             }
             return Ok(responseApi);
         }
-
-        /*[HttpPut("{id}")]
-        public async Task<ActionResult<List<UsuarioDTO>>> UpdateUsuario(UsuarioDTO objeto)
-        {
-
-            var DbObjeto = await _context.Usuarios.FindAsync(objeto.Id);
-            if (DbObjeto == null)
-                return BadRequest("no se encuentra");
-            DbObjeto.Username = objeto.Username;
-
-
-            await _context.SaveChangesAsync();
-
-            return Ok(await _context.Usuarios.ToListAsync());
-        }
-
-        //[HttpDelete]
-        //[Route("{id}")]
-        //public async Task<ActionResult<List<UsuarioDTO>>> DeleteUsuario(int id)
-        //{
-        //    var DbObjeto = await _context.Usuarios.FirstOrDefaultAsync(Ob => Ob.Id == id);
-        //    if (DbObjeto == null)
-        //    {
-        //        return NotFound("no existe :/");
-        //    }
-
-        //    _context.Usuarios.Remove(DbObjeto);
-        //    await _context.SaveChangesAsync();
-
-        //    return Ok(await GetDbUsuario());
-        //}*/
     }
 }
