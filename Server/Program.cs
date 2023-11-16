@@ -1,8 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
-using ProyectoPADSimpson.Server.Interfaces;
-using ProyectoPADSimpson.Server.Services;
+using ProyectoPADSimpson.Client.Servicios;
 using System.Collections.Generic;
 
 var builder = WebApplication.CreateBuilder(args);

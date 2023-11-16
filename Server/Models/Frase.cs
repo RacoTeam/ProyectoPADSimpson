@@ -9,4 +9,5 @@ public partial class Frase
     public string Texto { get; set; }
     public string Capitulo { get; set; }
     public int IdUsuario { get; set; }
+    public string Personaje { get; set; }
 }

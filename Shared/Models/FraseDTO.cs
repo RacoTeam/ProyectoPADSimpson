@@ -12,5 +12,7 @@ namespace ProyectoPADSimpson.Shared.Models
         public string Capitulo { get; set; }
         [Required]
         public int IdUsuario { get; set; }
+        [Required]
+        public string Personaje { get; set; }
     }
 }
