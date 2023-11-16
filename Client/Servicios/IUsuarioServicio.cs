@@ -4,11 +4,11 @@ namespace ProyectoPADSimpson.Client.Servicio
 {
     public interface IUsuarioServicio
     {
-        Task<List<Usuario>> Lista(string rol, string buscar);
-        Task<Usuario> Obtener(int id);
+        Task<List<UsuarioDTO>> Lista(string rol, string buscar);
+        Task<UsuarioDTO> Obtener(int id);
         //Task<ResponseDTO<SesionDTO>> Autorizacion(LoginDTO modelo);
 
-        Task<Usuario> Crear(Usuario modelo);
-        Task<bool> Editar(Usuario modelo);
+        Task<UsuarioDTO> Crear(UsuarioDTO modelo);
+        Task<bool> Editar(UsuarioDTO modelo);
     }
 }

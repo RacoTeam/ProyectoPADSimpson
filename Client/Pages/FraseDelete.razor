@@ -37,10 +37,10 @@
 @code {
     [Parameter]
     public int FraseId { get; set; }
-    Frase Frase = new Frase();
+    FraseDTO Frase = new FraseDTO();
     protected override async Task OnInitializedAsync()
     {
-        Frase = await Http.GetFromJsonAsync<Frase>("/api/Frase/" + Convert.ToInt32(FraseId));
+        Frase = await Http.GetFromJsonAsync<FraseDTO>("/api/Frase/" + Convert.ToInt32(FraseId));
     }
     protected async Task RemoveFrase(int FraseID)
     {

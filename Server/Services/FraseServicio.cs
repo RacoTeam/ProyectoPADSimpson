@@ -12,7 +12,7 @@ namespace ProyectoPADSimpson.Server.Services
             _dbContext = dbContext;
         }
         //To Get all Frase details
-        public List<Frase> GetFraseDetails()
+        public List<FraseDTO> GetFraseDetails()
         {
             try
             {
@@ -24,7 +24,7 @@ namespace ProyectoPADSimpson.Server.Services
             }
         }
         //To Add new Frase record
-        public void AddFrase(Frase Frase)
+        public void AddFrase(FraseDTO Frase)
         {
             try
             {
@@ -37,7 +37,7 @@ namespace ProyectoPADSimpson.Server.Services
             }
         }
         //To Update the records of a particluar Frase
-        public void UpdateFraseDetails(Frase Frase)
+        public void UpdateFraseDetails(FraseDTO Frase)
         {
             try
             {
@@ -50,11 +50,11 @@ namespace ProyectoPADSimpson.Server.Services
             }
         }
         //Get the details of a particular Frase
-        public Frase GetFraseData(int id)
+        public FraseDTO GetFraseData(int id)
         {
             try
             {
-                Frase? Frase = _dbContext.Frases.Find(id);
+                FraseDTO? Frase = _dbContext.Frases.Find(id);
                 if (Frase != null)
                 {
                     return Frase;
@@ -74,7 +74,7 @@ namespace ProyectoPADSimpson.Server.Services
         {
             try
             {
-                Frase? Frase = _dbContext.Frases.Find(id);
+                FraseDTO? Frase = _dbContext.Frases.Find(id);
                 if (Frase != null)
                 {
                     _dbContext.Frases.Remove(Frase);
