@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ProyectoPADSimpson.Server.Interfaces;
+using System.Diagnostics;
+
 using ProyectoPADSimpson.Shared.Models;
-using System.Collections.Generic;
+using ProyectoPADSimpson.Shared;
+using ProyectoPADSimpson.Server.Models;
 
 namespace ProyectoPADSimpson.Server.Controllers
 {
@@ -12,41 +14,94 @@ namespace ProyectoPADSimpson.Server.Controllers
     public class FraseController : ControllerBase
     {
 
-        private readonly IFraseServicio _IFraseServicio;
-        public FraseController(IFraseServicio IFraseServicio)
+        private readonly ApplicationDbContext _context;
+
+        public FraseController(ApplicationDbContext context)
         {
-            _IFraseServicio = IFraseServicio;
+            _context = context;
         }
-        [HttpGet]
-        public async Task<List<FraseDTO>> Get()
-        {
-            return await Task.FromResult(_IFraseServicio.GetFraseDetails());
-        }
+
         [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        public async Task<ActionResult<List<Frase>>> ObtenerFrasesDelUsuario(int idUsuario)
         {
-            FraseDTO Frase = _IFraseServicio.GetFraseData(id);
-            if (Frase != null)
+            var miobjeto = await _context.Frases.FirstOrDefaultAsync(ob => ob.IdUsuario == idUsuario);
+            if (miobjeto == null)
             {
-                return Ok(Frase);
+                return NotFound(" :/");
             }
-            return NotFound();
+
+            return Ok(miobjeto);
         }
+
         [HttpPost]
-        public void Post(FraseDTO Frase)
+        public async Task<ActionResult> AgregarFrase(FraseDTO frase)
         {
-            _IFraseServicio.AddFrase(Frase);
+            var responseApi = new ResponseAPI<int>();
+            try
+            {
+                var dbFrase = new Frase
+                {
+                    IdUsuario = frase.IdUsuario,
+                    Texto = frase.Texto,
+                    Capitulo = frase.Capitulo,
+                    Personaje = frase.Personaje
+                };
+
+                _context.Frases.Add(dbFrase);
+                await _context.SaveChangesAsync();
+
+                if (dbFrase.Id != 0)
+                {
+                    responseApi.EsCorrecto = true;
+                    responseApi.Valor = dbFrase.Id;
+                }
+                else
+                {
+                    responseApi.EsCorrecto = false;
+                    responseApi.Mensaje = "No guardado";
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            return Ok(responseApi);
         }
-        [HttpPut]
-        public void Put(FraseDTO Frase)
-        {
-            _IFraseServicio.UpdateFraseDetails(Frase);
-        }
+
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> EliminarFrase(int id)
         {
-            _IFraseServicio.DeleteFrase(id);
-            return Ok();
+            var responseApi = new ResponseAPI<int>();
+
+            try
+            {
+
+                var dbEmpleado = await _context.Frases.FirstOrDefaultAsync(f => f.Id == id);
+
+                if (dbEmpleado != null)
+                {
+                    _context.Frases.Remove(dbEmpleado);
+                    await _context.SaveChangesAsync();
+
+
+                    responseApi.EsCorrecto = true;
+                }
+                else
+                {
+                    responseApi.EsCorrecto = false;
+                    responseApi.Mensaje = "Frase no encontrada";
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+                responseApi.EsCorrecto = false;
+                responseApi.Mensaje = ex.Message;
+            }
+
+            return Ok(responseApi);
         }
     }
 }

@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using ProyectoPADSimpson.Client.Servicios;
 using Blazored.LocalStorage;
 using Blazored.Toast;
-using ProyectoPADSimpson.Client.Servicio;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
