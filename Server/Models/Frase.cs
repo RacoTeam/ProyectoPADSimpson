@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ProyectoPADSimpson.Server.Modelos;
+namespace ProyectoPADSimpson.Server.Models;
 
 public partial class Frase
 {

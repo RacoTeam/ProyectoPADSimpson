@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
+
 using ProyectoPADSimpson.Shared.Models;
 using ProyectoPADSimpson.Shared;
-using System.Diagnostics;
+using ProyectoPADSimpson.Server.Models;
 
 namespace ProyectoPADSimpson.Server.Controllers
 {
@@ -11,12 +13,10 @@ namespace ProyectoPADSimpson.Server.Controllers
     [ApiController]
     public class UsuarioController : ControllerBase
     {
-
         private readonly ApplicationDbContext _context;
 
         public UsuarioController(ApplicationDbContext context)
         {
-
             _context = context;
         }
 
@@ -40,7 +40,6 @@ namespace ProyectoPADSimpson.Server.Controllers
             return Ok(miobjeto);
         }
 
-
         //[HttpPost("Crear")]
         //public async Task<ActionResult<UsuarioDTO>> Crear([FromBody] UsuarioDTO objeto)
         //{
@@ -50,29 +49,29 @@ namespace ProyectoPADSimpson.Server.Controllers
         //    return Ok(await GetDbUsuario());
         //}
 
-        [HttpPost("Guardar")]
-        public async Task<ActionResult> Guardar(UsuarioDTO objeto)
+        [HttpPost]
+        public async Task<ActionResult> Guardar(UsuarioDTO usuario)
         {
             var responseApi = new ResponseAPI<int>();
             try
             {
-                var dbUsuario = new UsuarioDTO
+                var dbUsuario = new Usuario
                 {
-                    Username = objeto.Username,
-                    Password = objeto.Password,
+                    Username = usuario.Username,
+                    Password = usuario.Password,
                 };
 
-                _context.Usuarios.Add(objeto);
+                _context.Usuarios.Add(dbUsuario);
                 await _context.SaveChangesAsync();
 
                 if(dbUsuario.Id != 0)
                 {
-                    responseApi.esCorrecto = true;
+                    responseApi.EsCorrecto = true;
                     responseApi.Valor = dbUsuario.Id;
                 }
                 else
                 {
-                    responseApi.esCorrecto = false;
+                    responseApi.EsCorrecto = false;
                     responseApi.Mensaje = "No guardado";
                 }
             }
@@ -81,10 +80,10 @@ namespace ProyectoPADSimpson.Server.Controllers
 
                 throw;
             }
-            return Ok(await GetDbUsuario());
+            return Ok(responseApi);
         }
 
-        [HttpPut("{id}")]
+        /*[HttpPut("{id}")]
         public async Task<ActionResult<List<UsuarioDTO>>> UpdateUsuario(UsuarioDTO objeto)
         {
 
@@ -97,10 +96,7 @@ namespace ProyectoPADSimpson.Server.Controllers
             await _context.SaveChangesAsync();
 
             return Ok(await _context.Usuarios.ToListAsync());
-
-
         }
-
 
         //[HttpDelete]
         //[Route("{id}")]
@@ -116,12 +112,6 @@ namespace ProyectoPADSimpson.Server.Controllers
         //    await _context.SaveChangesAsync();
 
         //    return Ok(await GetDbUsuario());
-        //}
-
-
-        private async Task<List<UsuarioDTO>> GetDbUsuario()
-        {
-            return await _context.Usuarios.ToListAsync();
-        }
+        //}*/
     }
 }
