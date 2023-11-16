@@ -16,23 +16,23 @@
                 <div class="card-body">
 
 
-                    <EditForm Model="modelo" OnValidSubmit="GuardarCambios">
+                    <EditForm Model="UsuarioModelo" OnValidSubmit="GuardarCambios">
 
                         <div class="form-floating mb-3">
-                            <input class="form-control" id="inputEmail" type="text" placeholder="name@example.com" @bind-value="modelo.Username" autocomplete="off" />
+                            <input class="form-control" id="inputEmail" type="text" placeholder="username" @bind-value="UsuarioModelo.Username" autocomplete="off" />
                             <label for="inputEmail">Nombre Completo</label>
                         </div>
 
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <div class="form-floating mb-3 mb-md-0">
-                                    <input class="form-control" id="inputPassword" type="password" placeholder="Create a password" @bind-value="modelo.Password" autocomplete="off" />
+                                    <input class="form-control" id="inputPassword" type="password" placeholder="Create a password" @bind-value="UsuarioModelo.Password" autocomplete="off" />
                                     <label for="inputPassword">Contraseña</label>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating mb-3 mb-md-0">
-                                <input class="form-control" id="inputPasswordConfirm" type="password" placeholder="Confirm password" @bind-value="modelo.ConfirmPassword" autocomplete="off" />
+                                <input class="form-control" id="inputPasswordConfirm" type="password" placeholder="Confirm password" @bind-value="confirmarPassword" autocomplete="off" />
                                     <label for="inputPasswordConfirm">Confirmar Contraseña</label>
                                 </div>
                             </div>
@@ -53,18 +53,20 @@
 </div >
 
 @code {
-    private Usuario modelo = new Usuario();
+    private UsuarioDTO UsuarioModelo = new UsuarioDTO();
+
+    String confirmarPassword = "";
 
     private async Task GuardarCambios()
     {
-        if (modelo.Password != modelo.ConfirmPassword)
+        if (UsuarioModelo.Password != confirmarPassword)
         {
-            toastServicio.ShowWarning("Las contraseñas no coincides");
+            toastServicio.ShowWarning("Las contraseñas no coinciden.");
             return;
         }
 
 
-        var response = await _usuarioServicio.Crear(modelo);
+        var response = await _usuarioServicio.Crear(UsuarioModelo);
 
         if (!(response is null))
         {
@@ -73,7 +75,7 @@
         }
         else
         {
-            toastServicio.ShowError("No se pudo crear su cuenta, intente mas tarde");
+            toastServicio.ShowError("No se pudo crear su cuenta, intente más tarde");
         }
     }
 }

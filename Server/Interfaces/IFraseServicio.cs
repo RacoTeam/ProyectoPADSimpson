@@ -4,10 +4,10 @@ namespace ProyectoPADSimpson.Server.Interfaces
 {
     public interface IFraseServicio
     {
-        public List<Frase> GetFraseDetails();
-        public void AddFrase(Frase Frase);
-        public void UpdateFraseDetails(Frase Frase);
-        public Frase GetFraseData(int id);
+        public List<FraseDTO> GetFraseDetails();
+        public void AddFrase(FraseDTO Frase);
+        public void UpdateFraseDetails(FraseDTO Frase);
+        public FraseDTO GetFraseData(int id);
         public void DeleteFrase(int id);
     }
 }

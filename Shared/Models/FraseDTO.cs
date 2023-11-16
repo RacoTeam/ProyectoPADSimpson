@@ -2,7 +2,7 @@
 
 namespace ProyectoPADSimpson.Shared.Models
 {
-    public class Frase
+    public class FraseDTO
     {
         [Key]
         public int Id { get; set; }

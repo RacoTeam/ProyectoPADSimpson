@@ -18,14 +18,14 @@ namespace ProyectoPADSimpson.Server.Controllers
             _IFraseServicio = IFraseServicio;
         }
         [HttpGet]
-        public async Task<List<Frase>> Get()
+        public async Task<List<FraseDTO>> Get()
         {
             return await Task.FromResult(_IFraseServicio.GetFraseDetails());
         }
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            Frase Frase = _IFraseServicio.GetFraseData(id);
+            FraseDTO Frase = _IFraseServicio.GetFraseData(id);
             if (Frase != null)
             {
                 return Ok(Frase);
@@ -33,12 +33,12 @@ namespace ProyectoPADSimpson.Server.Controllers
             return NotFound();
         }
         [HttpPost]
-        public void Post(Frase Frase)
+        public void Post(FraseDTO Frase)
         {
             _IFraseServicio.AddFrase(Frase);
         }
         [HttpPut]
-        public void Put(Frase Frase)
+        public void Put(FraseDTO Frase)
         {
             _IFraseServicio.UpdateFraseDetails(Frase);
         }

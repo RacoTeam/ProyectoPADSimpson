@@ -16,14 +16,14 @@ namespace ProyectoPADSimpson.Client.Servicio
         }
         //To Get all Usuario details
 
-        public async Task<Usuario> Crear(Usuario modelo)
+        public async Task<UsuarioDTO> Crear(UsuarioDTO modelo)
         {
             var response = await _httpClient.PostAsJsonAsync("Usuario/Crear", modelo);
-            var result = await response.Content.ReadFromJsonAsync<Usuario>();
+            var result = await response.Content.ReadFromJsonAsync<UsuarioDTO>();
             return result!;
 
         }
-        public async Task<bool> Editar(Usuario modelo)
+        public async Task<bool> Editar(UsuarioDTO modelo)
         {
             var response = await _httpClient.PutAsJsonAsync("Usuario/Editar", modelo);
             var result = await response.Content.ReadFromJsonAsync<bool>();
@@ -31,14 +31,14 @@ namespace ProyectoPADSimpson.Client.Servicio
         }
 
 
-        public async Task<List<Usuario>> Lista(string rol, string buscar)
+        public async Task<List<UsuarioDTO>> Lista(string rol, string buscar)
         {
-            return await _httpClient.GetFromJsonAsync<List<Usuario>>($"Usuario/Lista/{rol}/{buscar}");
+            return await _httpClient.GetFromJsonAsync<List<UsuarioDTO>>($"Usuario/Lista/{rol}/{buscar}");
         }
 
-        public async Task<Usuario> Obtener(int id)
+        public async Task<UsuarioDTO> Obtener(int id)
         {
-            return await _httpClient.GetFromJsonAsync<Usuario>($"Usuario/Obtener/{id}");
+            return await _httpClient.GetFromJsonAsync<UsuarioDTO>($"Usuario/Obtener/{id}");
         }
     }
 }

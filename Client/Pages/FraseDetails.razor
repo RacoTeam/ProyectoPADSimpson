@@ -55,9 +55,9 @@ else
 }
 
 @code {
-    protected List<Frase> FraseList = new();
-    protected List<Frase> searchFraseData = new();
-    protected Frase Frase = new();
+    protected List<FraseDTO> FraseList = new();
+    protected List<FraseDTO> searchFraseData = new();
+    protected FraseDTO Frase = new();
     protected string SearchString { get; set; } = string.Empty;
     protected override async Task OnInitializedAsync()
     {
@@ -65,7 +65,7 @@ else
     }
     protected async Task GetFrase()
     {
-        FraseList = await Http.GetFromJsonAsync<List<Frase>>("api/Frase");
+        FraseList = await Http.GetFromJsonAsync<List<FraseDTO>>("api/Frase");
         searchFraseData = FraseList;
     }
     protected void FilterFrase()

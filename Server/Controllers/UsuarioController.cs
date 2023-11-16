@@ -21,17 +21,15 @@ namespace ProyectoPADSimpson.Server.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Usuario>>> GetUsuario()
+        public async Task<ActionResult<List<UsuarioDTO>>> GetUsuario()
         {
             var lista = await _context.Usuarios.ToListAsync();
             return Ok(lista);
         }
 
-
-
         [HttpGet]
         [Route("{id}")]
-        public async Task<ActionResult<List<Usuario>>> GetSingleUsuario(int id)
+        public async Task<ActionResult<List<UsuarioDTO>>> GetSingleUsuario(int id)
         {
             var miobjeto = await _context.Usuarios.FirstOrDefaultAsync(ob => ob.Id == id);
             if (miobjeto == null)
@@ -43,23 +41,22 @@ namespace ProyectoPADSimpson.Server.Controllers
         }
 
 
-        [HttpPost("Crear")]
-        public async Task<ActionResult<Usuario>> Crear([FromBody] Usuario objeto)
-        {
+        //[HttpPost("Crear")]
+        //public async Task<ActionResult<UsuarioDTO>> Crear([FromBody] UsuarioDTO objeto)
+        //{
 
-            _context.Usuarios.Add(objeto);
-            await _context.SaveChangesAsync();
-            return Ok(await GetDbUsuario());
-        }
+        //    _context.Usuarios.Add(objeto);
+        //    await _context.SaveChangesAsync();
+        //    return Ok(await GetDbUsuario());
+        //}
 
-        //Me quede aca
         [HttpPost("Guardar")]
-        public async Task<ActionResult> Guardar(Usuario objeto)
+        public async Task<ActionResult> Guardar(UsuarioDTO objeto)
         {
             var responseApi = new ResponseAPI<int>();
             try
             {
-                var dbUsuario = new Usuario
+                var dbUsuario = new UsuarioDTO
                 {
                     Username = objeto.Username,
                     Password = objeto.Password,
@@ -84,14 +81,11 @@ namespace ProyectoPADSimpson.Server.Controllers
 
                 throw;
             }
-
-            
-            
             return Ok(await GetDbUsuario());
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<List<Usuario>>> UpdateUsuario(Usuario objeto)
+        public async Task<ActionResult<List<UsuarioDTO>>> UpdateUsuario(UsuarioDTO objeto)
         {
 
             var DbObjeto = await _context.Usuarios.FindAsync(objeto.Id);
@@ -108,24 +102,24 @@ namespace ProyectoPADSimpson.Server.Controllers
         }
 
 
-        [HttpDelete]
-        [Route("{id}")]
-        public async Task<ActionResult<List<Usuario>>> DeleteUsuario(int id)
-        {
-            var DbObjeto = await _context.Usuarios.FirstOrDefaultAsync(Ob => Ob.Id == id);
-            if (DbObjeto == null)
-            {
-                return NotFound("no existe :/");
-            }
+        //[HttpDelete]
+        //[Route("{id}")]
+        //public async Task<ActionResult<List<UsuarioDTO>>> DeleteUsuario(int id)
+        //{
+        //    var DbObjeto = await _context.Usuarios.FirstOrDefaultAsync(Ob => Ob.Id == id);
+        //    if (DbObjeto == null)
+        //    {
+        //        return NotFound("no existe :/");
+        //    }
 
-            _context.Usuarios.Remove(DbObjeto);
-            await _context.SaveChangesAsync();
+        //    _context.Usuarios.Remove(DbObjeto);
+        //    await _context.SaveChangesAsync();
 
-            return Ok(await GetDbUsuario());
-        }
+        //    return Ok(await GetDbUsuario());
+        //}
 
 
-        private async Task<List<Usuario>> GetDbUsuario()
+        private async Task<List<UsuarioDTO>> GetDbUsuario()
         {
             return await _context.Usuarios.ToListAsync();
         }

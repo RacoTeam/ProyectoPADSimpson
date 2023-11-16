@@ -12,7 +12,7 @@ namespace ProyectoPADSimpson.Server.Services
             _dbContext = dbContext;
         }
         //To Get all Usuario details
-        public List<Usuario> GetUsuarioDetails()
+        public List<UsuarioDTO> GetUsuarioDetails()
         {
             try
             {
@@ -24,7 +24,7 @@ namespace ProyectoPADSimpson.Server.Services
             }
         }
         //To Add new Usuario record
-        public void AddUsuario(Usuario Usuario)
+        public void AddUsuario(UsuarioDTO Usuario)
         {
             try
             {
@@ -37,7 +37,7 @@ namespace ProyectoPADSimpson.Server.Services
             }
         }
         //To Update the records of a particluar Usuario
-        public void UpdateUsuarioDetails(Usuario Usuario)
+        public void UpdateUsuarioDetails(UsuarioDTO Usuario)
         {
             try
             {
@@ -50,11 +50,11 @@ namespace ProyectoPADSimpson.Server.Services
             }
         }
         //Get the details of a particular Usuario
-        public Usuario GetUsuarioData(int id)
+        public UsuarioDTO GetUsuarioData(int id)
         {
             try
             {
-                Usuario? Usuario = _dbContext.Usuarios.Find(id);
+                UsuarioDTO? Usuario = _dbContext.Usuarios.Find(id);
                 if (Usuario != null)
                 {
                     return Usuario;
@@ -74,7 +74,7 @@ namespace ProyectoPADSimpson.Server.Services
         {
             try
             {
-                Usuario? Usuario = _dbContext.Usuarios.Find(id);
+                UsuarioDTO? Usuario = _dbContext.Usuarios.Find(id);
                 if (Usuario != null)
                 {
                     _dbContext.Usuarios.Remove(Usuario);

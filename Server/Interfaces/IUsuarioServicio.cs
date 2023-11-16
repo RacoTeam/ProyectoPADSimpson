@@ -4,10 +4,10 @@ namespace ProyectoPADSimpson.Server.Interfaces
 {
     public interface IUsuarioServicio
     {
-        public List<Usuario> GetUsuarioDetails();
-        public void AddUsuario(Usuario usuario);
-        public void UpdateUsuarioDetails(Usuario usuario);
-        public Usuario GetUsuarioData(int id);
+        public List<UsuarioDTO> GetUsuarioDetails();
+        public void AddUsuario(UsuarioDTO usuario);
+        public void UpdateUsuarioDetails(UsuarioDTO usuario);
+        public UsuarioDTO GetUsuarioData(int id);
         public void DeleteUsuario(int id);
     }
 }
