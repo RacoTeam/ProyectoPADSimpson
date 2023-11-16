@@ -8,7 +8,7 @@ namespace ProyectoPADSimpson.Shared
 {
     public class ResponseAPI<T>
     {
-        public bool esCorrecto  { get; set; }
+        public bool EsCorrecto  { get; set; }
         public T? Valor{ get; set; }
         public string? Mensaje { get; set; }
     }
