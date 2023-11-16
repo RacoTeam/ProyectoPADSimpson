@@ -1,7 +1,7 @@
 ﻿@page "/registrarse"
 
 @using ProyectoPADSimpson.Shared.Models;
-
+@using ProyectoPADSimpson.Client.Servicio;
 
 @inject HttpClient Http
 
@@ -17,17 +17,19 @@
                 <div class="card-body">
 
 
-                    <EditForm Model="UsuarioModelo" OnValidSubmit="GuardarCambios">
+                    <EditForm Model="usuario" OnValidSubmit="OnValidSubmit">
+                    <DataAnnotationsValidator></DataAnnotationsValidator>
 
                         <div class="form-floating mb-3">
-                            <input class="form-control" id="inputEmail" type="text" placeholder="username" @bind-value="UsuarioModelo.Username" autocomplete="off" />
-                            <label for="inputEmail">Nombre Completo</label>
+                            <InputText class="form-control" id="inputEmail" placeholder="username" @bind-value="usuario.Username" autocomplete="off"></InputText>
+            
+                            <label for="inputEmail">Nombre de Usuario</label>
                         </div>
 
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <div class="form-floating mb-3 mb-md-0">
-                                    <input class="form-control" id="inputPassword" type="password" placeholder="Create a password" @bind-value="UsuarioModelo.Password" autocomplete="off" />
+                                    <input class="form-control" id="inputPassword" type="password" placeholder="Create a password" @bind-value="usuario.Password" autocomplete="off" />
                                     <label for="inputPassword">Contraseña</label>
                                 </div>
                             </div>
@@ -54,22 +56,31 @@
 </div >
 
 @code {
-    private UsuarioDTO UsuarioModelo = new UsuarioDTO();
 
     String confirmarPassword = "";
 
-    private async Task GuardarCambios()
+    [Parameter]
+    public int idUsuarioEditar { get; set; } = 0;
+
+
+    string titulo = "Guardar Usuario";
+    string btnTexto = "Nuevo Usuario";
+
+    UsuarioDTO usuario = new UsuarioDTO();
+
+    private async Task OnValidSubmit()
     {
-        if (UsuarioModelo.Password != confirmarPassword)
+        int idDevuelto = 0;
+        
+        if (usuario.Password != confirmarPassword)
         {
             toastServicio.ShowWarning("Las contraseñas no coinciden.");
             return;
         }
 
-
-        var response = await _usuarioServicio.Crear(UsuarioModelo);
-
-        if (!(response is null))
+        idDevuelto = await _usuarioServicio.Guardar(usuario);
+     
+        if (idDevuelto != 0)
         {
             toastServicio.ShowSuccess("Su cuenta ha sido creada");
             _navServicio.NavigateTo("/login");
@@ -78,5 +89,10 @@
         {
             toastServicio.ShowError("No se pudo crear su cuenta, intente más tarde");
         }
+
+        // if (idDevuelto != 0)
+        //     _navServicio.NavigateTo("/Usuarios");
+
     }
+
 }
