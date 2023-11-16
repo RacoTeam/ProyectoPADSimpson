@@ -1,7 +1,7 @@
 ﻿@page "/registrarse"
 
 @using ProyectoPADSimpson.Shared.Models;
-@using ProyectoPADSimpson.Client.Servicio;
+@using ProyectoPADSimpson.Client.Servicios;
 
 @inject HttpClient Http
 
@@ -21,7 +21,7 @@
                     <DataAnnotationsValidator></DataAnnotationsValidator>
 
                         <div class="form-floating mb-3">
-                            <InputText class="form-control" id="inputEmail" placeholder="username" @bind-value="usuario.Username" autocomplete="off"></InputText>
+                            <input class="form-control" id="inputEmail" placeholder="username" @bind-value="usuario.Username" autocomplete="off"/>
             
                             <label for="inputEmail">Nombre de Usuario</label>
                         </div>
@@ -94,5 +94,4 @@
         //     _navServicio.NavigateTo("/Usuarios");
 
     }
-
 }
