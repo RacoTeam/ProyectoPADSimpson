@@ -1,7 +1,6 @@
 using ProyectoPADSimpson.Client;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using ProyectoPADSimpson.Client.Servicios;
 using Blazored.LocalStorage;
 using Blazored.Toast;
 using ProyectoPADSimpson.Client.Servicio;
