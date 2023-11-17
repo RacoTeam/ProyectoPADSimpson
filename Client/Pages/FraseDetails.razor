@@ -1,6 +1,10 @@
 ﻿@page "/fetchfrasedetails"
-@using ProyectoPADSimpson.Shared.Models;
 @inject HttpClient Http
+
+@using ProyectoPADSimpson.Shared.Models;
+@using ProyectoPADSimpson.Client.Services;
+
+@inject IFraseServicio _fraseServicio
 
 <h1>Frases Favoritas</h1>
 <p>Aquí puedes ver tus frases guardadas y eliminarlas.</p>
@@ -42,7 +46,7 @@ else
                 <tr>
                     <td>@Frase.Texto</td>
                     <td>@Frase.Personaje</td>
-                    <td>@Frase.Capitulo</td>
+                    <td>@Frase.Episodio</td>
                     <td>@Frase.IdUsuario</td>
                     <td>
                         <a href='/Frase/delete/@Frase.Id' class="btn btn-outline-danger" role="button">
@@ -67,7 +71,7 @@ else
     }
     protected async Task GetFrase()
     {
-        FraseList = await Http.GetFromJsonAsync<List<FraseDTO>>("api/Frase");
+        var FraseList = await _fraseServicio.ObtenerFrasesDelUsuario(1);
         searchFraseData = FraseList;
     }
     protected void FilterFrase()

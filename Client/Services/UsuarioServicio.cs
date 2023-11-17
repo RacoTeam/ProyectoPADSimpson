@@ -4,7 +4,7 @@ using System.Net.Http.Json;
 using System.Text.Json.Serialization;
 using System.Text.Json;
 
-namespace ProyectoPADSimpson.Client.Servicios
+namespace ProyectoPADSimpson.Client.Services
 {
     public class UsuarioServicio : IUsuarioServicio
     {
