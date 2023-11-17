@@ -38,6 +38,16 @@
     </div>
     <script src="_framework/blazor.webassembly.js"></script>
     <script>navigator.serviceWorker.register('service-worker.js');</script>
+    <!-- Asegúrate de agregar una referencia a Microsoft.Extensions.DependencyInjection.js -->
+    <script src="_content/Microsoft.Extensions.DependencyInjection.WebExtensions/microsoft.extensions.dependencyinjection.webextensions.js"></script>
+
+    <script>
+        window.obtenerUsuarioIdDesdeSesion = function () {
+            // Accede a la variable de sesión almacenada en sessionStorage
+            var usuarioId = sessionStorage.getItem("UsuarioId");
+            return usuarioId ? parseInt(usuarioId) : 0;
+        };
+    </script>
 </body>
 
 </html>

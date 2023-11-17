@@ -1,11 +1,12 @@
 ﻿@page "/login"
 
-@* @inject IUsuarioServicio _usuarioServicio *@
 @using ProyectoPADSimpson.Shared.Models;
+@using ProyectoPADSimpson.Client.Servicios;
 
 
+@inject IUsuarioServicio _usuarioServicio
 @inject NavigationManager _navServicio
-
+@inject IToastService toastServicio
 
 <div class="container">
     <div class="row justify-content-center">
@@ -13,23 +14,22 @@
             <div class="card rounded-lg mt-5">
                 <div class="card-header"><h3 class="text-center font-weight-light my-4">Login</h3></div>
                 <div class="card-body">
-
-                        
+                    <EditForm Model="usuario" OnValidSubmit="OnValidSubmit">
                         <div class="form-floating mb-3">
-                            <input class="form-control" id="inputEmail" placeholder="usuario" @bind-value="modelo.Username" autocomplete="off" />
+                            <input class="form-control" id="inputEmail" placeholder="usuario" @bind-value="usuario.Username" autocomplete="off" />
                             <label for="inputEmail">Nombre de Usuario</label>
-                            
+
                         </div>
                         <div class="form-floating mb-3">
-                            <input class="form-control" id="inputPassword" type="password" placeholder="123" @bind-value="modelo.Password" autocomplete="off" />
+                            <input class="form-control" id="inputPassword" type="password" placeholder="123" @bind-value="usuario.Password" autocomplete="off" />
                             <label for="inputPassword">Contraseña</label>
-       
+
                         </div>
 
                         <div class="d-grid gap-1 mt-4 mb-0">
                             <button class="btn btn-primary" type="submit">Ingresar</button>
                         </div>
-
+                    </EditForm>
                 </div>
                 <div class="card-footer text-center py-3">
                     <div class="small"><a href="/registrarse">No tienes una cuenta? Registrate!</a></div>
@@ -40,6 +40,26 @@
 </div>
 
 @code {
-    private UsuarioDTO modelo = new UsuarioDTO();
+    private UsuarioDTO usuario = new UsuarioDTO();
 
+    private async Task OnValidSubmit()
+    {
+        bool idDevuelto = false;
+
+        idDevuelto = await _usuarioServicio.Buscar(usuario);
+
+        if (idDevuelto)
+        {
+            toastServicio.ShowSuccess("Logeo exitoso");
+            _navServicio.NavigateTo("/simpson");
+        }
+        else
+        {
+            toastServicio.ShowError("No se pudo crear su cuenta, intente más tarde");
+        }
+
+        // if (idDevuelto != 0)
+        //     _navServicio.NavigateTo("/Usuarios");
+
+    }
 }
