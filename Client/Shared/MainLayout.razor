@@ -1,6 +1,8 @@
 ﻿@inherits LayoutComponentBase
 @inject IJSRuntime JsRuntime
 @inject Blazored.SessionStorage.ISessionStorageService sessionStorage
+@inject IToastService toastServicio
+
 
 <div class="page">
     <div class="sidebar">
@@ -16,7 +18,8 @@
             }
             else
             {
-                <a href="#" @onclick="CerrarSesion">Cerrar Sesión</a>
+                <p>Sesion Iniciada</p>
+                //<a href="#" @onclick="CerrarSesion">Cerrar Sesión</a>
             }
         </div>
 
@@ -46,6 +49,7 @@
     {
         await base.OnInitializedAsync();
         usuarioId = await sessionStorage.GetItemAsync<int>("id");
+        toastServicio.ShowSuccess("Se Actualiza Pagina");
        // usuarioId = await ObtenerUsuarioIdDesdeSesion();
     }
 
