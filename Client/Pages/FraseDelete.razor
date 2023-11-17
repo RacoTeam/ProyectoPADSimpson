@@ -1,12 +1,24 @@
 ﻿@page "/Frase/delete/{FraseId:int}"
-@using ProyectoPADSimpson.Shared.Models
 @inject HttpClient Http
+
+@using ProyectoPADSimpson.Client.Services;
+@using ProyectoPADSimpson.Shared.Models
+
 @inject NavigationManager NavigationManager
 
-<h2>Delete Frase</h2>
+@inject IFraseServicio _fraseServicio
+
+<style>
+    body {
+        background: rgb(9,141,227);
+        background: linear-gradient(180deg, rgba(9,141,227,1) 0%, rgba(91,160,187,1) 100%);
+    }
+</style>
+
+<h2>Eliminar frase</h2>
 <br />
 <div class="form-group">
-    <h4>Do you want to delete this Frase?</h4>
+    <h4>Quieres eliminar la frase?</h4>
     <table class="table">
         <tbody>
             <tr>
@@ -44,15 +56,17 @@
     FraseDTO Frase = new FraseDTO();
     protected override async Task OnInitializedAsync()
     {
-        Frase = await Http.GetFromJsonAsync<FraseDTO>("/api/Frase/" + Convert.ToInt32(FraseId));
+        Frase = await _fraseServicio.ObtenerFrase(FraseId);
     }
+
     protected async Task RemoveFrase(int FraseID)
     {
-        await Http.DeleteAsync("api/Frase/" + FraseID);
-        NavigationManager.NavigateTo("/fetchFrasedetails");
+        await _fraseServicio.EliminarFrase(FraseID);
+        NavigationManager.NavigateTo("/fetchfrasedetails");
     }
+
     void Cancel()
     {
-        NavigationManager.NavigateTo("/fetchFrasedetails");
+        NavigationManager.NavigateTo("/fetchfrasedetails");
     }
 }

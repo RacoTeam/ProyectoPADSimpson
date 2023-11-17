@@ -5,10 +5,19 @@
 @using ProyectoPADSimpson.Client.Services;
 
 @inject IFraseServicio _fraseServicio
+@inject Blazored.SessionStorage.ISessionStorageService sessionStorage
 
-<h1>Frases Favoritas</h1>
+<style>
+    body {
+        background: rgb(9,141,227);
+        background: linear-gradient(180deg, rgba(9,141,227,1) 0%, rgba(91,160,187,1) 100%);
+        color: white;
+    }
+</style>
+
+<h1 class="Title">Frases Favoritas</h1>
 <p>Aquí puedes ver tus frases guardadas y eliminarlas.</p>
-<div class="row">
+<div class="row" hidden="@estaOculta">
     <div class="input-group col">
         <input type="text" class="form-control" placeholder="Buscar frase por texto"
         @bind="SearchString" @bind:event="oninput" @onkeyup="FilterFrase" />
@@ -24,13 +33,13 @@
 </div>
 <br />
 
-@if (FraseList == null)
+@if (!FraseList.Any())
 {
-    <p><em>Cargando...</em></p>
+    <p><em>@estado</em></p>
 }
 else
 {
-    <table class="table table-striped align-middle table-bordered">
+    <table class="table table-striped align-middle table-bordered" hidden="@estaOculta">
         <thead class="table-success">
             <tr>
                 <th>Frase</th>
@@ -65,15 +74,49 @@ else
     protected List<FraseDTO> searchFraseData = new();
     protected FraseDTO Frase = new();
     protected string SearchString { get; set; } = string.Empty;
+
+    public string estado = "Cargando...";
+    public bool estaOculta = true;
+
+    public int usuario_id;
+
     protected override async Task OnInitializedAsync()
     {
-        await GetFrase();
+        usuario_id = await sessionStorage.GetItemAsync<int>("id");
+
+        if (usuario_id != 0)
+        {
+            estado = "Cargando...";
+            await GetFrase();
+        }
+        else
+        {
+            estaOculta = true;
+            estado = "Inicie sesión para mostrar sus frases";
+        }
     }
+
     protected async Task GetFrase()
     {
-        var FraseList = await _fraseServicio.ObtenerFrasesDelUsuario(1);
+        try
+        {
+            FraseList = await _fraseServicio.ObtenerFrasesDelUsuario(usuario_id);
+        }
+        catch
+        {
+            estado = "Cuando cargues una frase podras verla aquí.";
+        }
+
         searchFraseData = FraseList;
+
+        if (await sessionStorage.ContainKeyAsync("usuario_lista_favoritas"))
+        {
+            await sessionStorage.SetItemAsync<List<FraseDTO>>("usuario_frases_favoritas", FraseList);
+        }
+
+        estaOculta = false;
     }
+
     protected void FilterFrase()
     {
         if (!string.IsNullOrEmpty(SearchString))
@@ -87,10 +130,12 @@ else
             FraseList = searchFraseData;
         }
     }
+
     protected void DeleteConfirm(int FraseID)
     {
         Frase = FraseList.FirstOrDefault(x => x.Id == FraseID);
     }
+
     public void ResetSearch()
     {
         SearchString = string.Empty;
