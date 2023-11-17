@@ -2,12 +2,13 @@
 using Microsoft.EntityFrameworkCore;
 using ProyectoPADSimpson.Shared;
 using ProyectoPADSimpson.Shared.Models;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
 using static System.Net.WebRequestMethods;
 
-namespace ProyectoPADSimpson.Client.Servicios
+namespace ProyectoPADSimpson.Client.Services
 {
     public class FraseServicio : IFraseServicio
     {
@@ -17,9 +18,9 @@ namespace ProyectoPADSimpson.Client.Servicios
             _httpClient = httpClient;
         }
 
-        public async Task<List<FraseDTO>> ObtenerFrasesDelUsuario(int idUsuario)
+        public async Task<FraseDTO> ObtenerFrase(int id)
         {
-            var result = await _httpClient.GetFromJsonAsync<ResponseAPI<List<FraseDTO>>>($"api/Frase/Usuario/{idUsuario}");
+            var result = await _httpClient.GetFromJsonAsync<ResponseAPI<FraseDTO>>($"api/Frase/{id}");
 
             if (result!.EsCorrecto)
                 return result.Valor!;
@@ -27,9 +28,9 @@ namespace ProyectoPADSimpson.Client.Servicios
                 throw new Exception(result.Mensaje);
         }
 
-        public async Task<FraseDTO> ObtenerFrase(int id)
+        public async Task<List<FraseDTO>> ObtenerFrasesDelUsuario(int idUsuario)
         {
-            var result = await _httpClient.GetFromJsonAsync<ResponseAPI<FraseDTO>>($"api/Frase/{id}");
+            var result = await _httpClient.GetFromJsonAsync<ResponseAPI<List<FraseDTO>>>($"api/Frase/Usuario/{idUsuario}");
 
             if (result!.EsCorrecto)
                 return result.Valor!;
