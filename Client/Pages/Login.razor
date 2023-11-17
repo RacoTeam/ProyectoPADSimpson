@@ -7,6 +7,7 @@
 @inject IUsuarioServicio _usuarioServicio
 @inject NavigationManager _navServicio
 @inject IToastService toastServicio
+@inject Blazored.SessionStorage.ISessionStorageService sessionStorage
 
 <div class="container">
     <div class="row justify-content-center">
@@ -44,18 +45,18 @@
 
     private async Task OnValidSubmit()
     {
-        bool idDevuelto = false;
 
-        idDevuelto = await _usuarioServicio.Buscar(usuario);
+        usuario = await _usuarioServicio.Buscar(usuario);
 
-        if (idDevuelto)
+        if (usuario is null )
         {
-            toastServicio.ShowSuccess("Logeo exitoso");
-            _navServicio.NavigateTo("/simpson");
+            toastServicio.ShowError("No se pudo crear su cuenta, intente más tarde");
         }
         else
         {
-            toastServicio.ShowError("No se pudo crear su cuenta, intente más tarde");
+            await sessionStorage.SetItemAsync("id", usuario.Id);
+            toastServicio.ShowSuccess("Logeo exitoso");
+            _navServicio.NavigateTo("/simpson");
         }
 
         // if (idDevuelto != 0)

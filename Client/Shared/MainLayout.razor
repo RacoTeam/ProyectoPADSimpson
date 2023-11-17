@@ -1,5 +1,6 @@
 ﻿@inherits LayoutComponentBase
 @inject IJSRuntime JsRuntime
+@inject Blazored.SessionStorage.ISessionStorageService sessionStorage
 
 <div class="page">
     <div class="sidebar">
@@ -28,7 +29,7 @@
 <BlazoredToasts Position="Blazored.Toast.Configuration.ToastPosition.BottomRight"
     Timeout="5"
     ShowProgressBar="true"
-    RemoveToastsOnNavigation="true"
+    RemoveToastsOnNavigation="false"
     IconType="Blazored.Toast.Configuration.IconType.FontAwesome"
     SuccessClass="success-toast-override"
     SuccessIcon="fa fa-thumbs-up"
@@ -44,25 +45,28 @@
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        usuarioId = await ObtenerUsuarioIdDesdeSesion();
+        usuarioId = await sessionStorage.GetItemAsync<int>("id");
+       // usuarioId = await ObtenerUsuarioIdDesdeSesion();
     }
 
-    private async Task<int> ObtenerUsuarioIdDesdeSesion()
-    {
-        var usuarioId = await JsRuntime.InvokeAsync<int>("obtenerUsuarioIdDesdeSesion");
-        return usuarioId;
-    }
+    // private async Task<int> ObtenerUsuarioIdDesdeSesion()
+    // {
+    //     var usuarioId = await JsRuntime.InvokeAsync<int>("obtenerUsuarioIdDesdeSesion");
+    //     return usuarioId;
+    // }
 
-    private async Task CerrarSesion()
-    {
-        // Lógica para cerrar sesión
-        await CambiarUsuarioIdEnSesion(0);
-    }
+    // private async Task CerrarSesion()
+    // {
+    //     // Lógica para cerrar sesión
+    //     await CambiarUsuarioIdEnSesion(0);
+    // }
 
-    private async Task CambiarUsuarioIdEnSesion(int nuevoUsuarioId)
-    {
-        await JsRuntime.InvokeAsync<object>("cambiarUsuarioIdEnSesion", nuevoUsuarioId);
-        usuarioId = nuevoUsuarioId;
-        await InvokeAsync(StateHasChanged); // Actualiza la interfaz de usuario
-    }
+    // private async Task CambiarUsuarioIdEnSesion(int nuevoUsuarioId)
+    // {
+    //     await JsRuntime.InvokeAsync<object>("cambiarUsuarioIdEnSesion", nuevoUsuarioId);
+    //     usuarioId = nuevoUsuarioId;
+    //     await InvokeAsync(StateHasChanged); // Actualiza la interfaz de usuario
+    // }
+
+    
 }

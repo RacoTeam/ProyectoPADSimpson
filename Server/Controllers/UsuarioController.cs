@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Diagnostics;
-
 using ProyectoPADSimpson.Shared.Models;
+using Blazored.SessionStorage;
 using ProyectoPADSimpson.Shared;
 using ProyectoPADSimpson.Server.Models;
 
@@ -35,8 +36,8 @@ namespace ProyectoPADSimpson.Server.Controllers
             }
             else
             {
-                HttpContext.Session.SetInt32("UsuarioId", miobjeto.Id);
-
+                //HttpContext.Session.SetInt32("UsuarioId", miobjeto.Id);
+                
                 responseApi.EsCorrecto = true;
                 responseApi.Valor = new UsuarioDTO
                 {

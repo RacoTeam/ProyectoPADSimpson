@@ -4,7 +4,7 @@ namespace ProyectoPADSimpson.Client.Services
 {
     public interface IUsuarioServicio
     {
-        Task<bool> Buscar(UsuarioDTO empleado);
+        Task<UsuarioDTO> Buscar(UsuarioDTO empleado);
         Task<int> Guardar(UsuarioDTO empleado);
     }
 }

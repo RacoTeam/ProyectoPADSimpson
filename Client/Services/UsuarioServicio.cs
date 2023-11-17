@@ -15,13 +15,13 @@ namespace ProyectoPADSimpson.Client.Services
         }
         //To Get all Usuario details
 
-        public async Task<bool> Buscar(UsuarioDTO usuario)
+        public async Task<UsuarioDTO> Buscar(UsuarioDTO usuario)
         {
             var result = await _httpClient.GetFromJsonAsync<ResponseAPI<UsuarioDTO>>(
     $"api/Usuario?Username={usuario.Username}&Password={usuario.Password}");
 
             if (result!.EsCorrecto)
-                return result.EsCorrecto;
+                return result.Valor;
             else
                 throw new Exception(result.Mensaje);
         }
