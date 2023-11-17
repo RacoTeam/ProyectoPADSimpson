@@ -21,16 +21,33 @@ namespace ProyectoPADSimpson.Server.Controllers
         }
 
         [HttpGet]
-        [Route("{id}")]
-        public async Task<ActionResult<List<UsuarioDTO>>> GetSingleUsuario(int id)
+        public async Task<IActionResult> Buscar([FromQuery] UsuarioDTO usuario)
         {
-            var miobjeto = await _context.Usuarios.FirstOrDefaultAsync(ob => ob.Id == id);
+            var responseApi = new ResponseAPI<UsuarioDTO>();
+
+            var miobjeto = await _context.Usuarios
+                .FirstOrDefaultAsync(ob => ob.Username == usuario.Username && ob.Password == usuario.Password);
+
             if (miobjeto == null)
             {
-                return NotFound(" :/");
+                responseApi.EsCorrecto = false;
+                responseApi.Mensaje = "Usuario no encontrado";
+            }
+            else
+            {
+                HttpContext.Session.SetInt32("UsuarioId", miobjeto.Id);
+
+                responseApi.EsCorrecto = true;
+                responseApi.Valor = new UsuarioDTO
+                {
+                    Id = miobjeto.Id,
+                    Username = miobjeto.Username,
+                    Password = miobjeto.Password // Asegúrate de ajustar según la estructura real de tu clase Usuario
+                };
+                
             }
 
-            return Ok(miobjeto);
+            return Ok(responseApi);
         }
 
         [HttpPost]

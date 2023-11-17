@@ -1,4 +1,5 @@
 ﻿@inherits LayoutComponentBase
+@inject IJSRuntime JsRuntime
 
 <div class="page">
     <div class="sidebar">
@@ -8,7 +9,14 @@
     <main>
         <div class="top-row px-4">
             <a href="aboutus">Nosotros</a>
-            <a href="login">Iniciar Sesion</a>
+            @if (usuarioId == 0)
+            {
+                <a href="login">Iniciar Sesión</a>
+            }
+            else
+            {
+                <a href="#" @onclick="CerrarSesion">Cerrar Sesión</a>
+            }
         </div>
 
         <article class="content px-4">
@@ -16,3 +24,32 @@
         </article>
     </main>
 </div>
+
+@code {
+    private int usuarioId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        usuarioId = await ObtenerUsuarioIdDesdeSesion();
+    }
+
+    private async Task<int> ObtenerUsuarioIdDesdeSesion()
+    {
+        var usuarioId = await JsRuntime.InvokeAsync<int>("obtenerUsuarioIdDesdeSesion");
+        return usuarioId;
+    }
+
+    private async Task CerrarSesion()
+    {
+        // Lógica para cerrar sesión
+        await CambiarUsuarioIdEnSesion(0);
+    }
+
+    private async Task CambiarUsuarioIdEnSesion(int nuevoUsuarioId)
+    {
+        await JsRuntime.InvokeAsync<object>("cambiarUsuarioIdEnSesion", nuevoUsuarioId);
+        usuarioId = nuevoUsuarioId;
+        await InvokeAsync(StateHasChanged); // Actualiza la interfaz de usuario
+    }
+}
