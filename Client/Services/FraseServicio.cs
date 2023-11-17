@@ -7,7 +7,7 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using static System.Net.WebRequestMethods;
 
-namespace ProyectoPADSimpson.Client.Servicios
+namespace ProyectoPADSimpson.Client.Services
 {
     public class FraseServicio : IFraseServicio
     {
