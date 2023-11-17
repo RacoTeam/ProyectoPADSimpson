@@ -6,6 +6,13 @@
 @using Newtonsoft.Json;
 @using Newtonsoft.Json.Linq;
 
+@using ProyectoPADSimpson.Shared.Models;
+@using ProyectoPADSimpson.Client.Services;
+
+@inject IFraseServicio _fraseServicio
+@inject NavigationManager _navServicio
+@inject IToastService _toastServicio
+
 <PageTitle>Buscador de Frases</PageTitle>
 
 <style>
@@ -69,17 +76,19 @@
         <div>
             @if (listaFrases != null && listaEpisodios != null)
             {
-                @foreach (var frasesPersonaje in frasesAgrupadas)
+                @foreach (var frasesPorPersonaje in frasesAgrupadas)
                 {
                     <div>
-                        <h4 id="nombre-personaje">@frasesPersonaje.Key</h4>
-                        <img src="@frasesPersonaje.First().image" width="100" style="margin: 10px;" />
+                        <h4 id="nombre-personaje">@frasesPorPersonaje.Key</h4>
+                        <img src="@frasesPorPersonaje.First().image" width="100" style="margin: 10px;" />
 
                         <div class="row">
-                            @foreach (var frase in frasesPersonaje)
+                            @foreach (var frase in frasesPorPersonaje)
                             {
                                 int index = listaFrases.IndexOf(frase);
                                 Episodio episodio = listaEpisodios.ElementAtOrDefault(index);
+
+                                bool esFavorito = estadoFavoritos.ContainsKey(frase.quote) && estadoFavoritos[frase.quote].EsFavorito;
 
                                 if (episodio != null)
                                 {
@@ -88,7 +97,18 @@
                                             <img src="@("https://frinkiac.com/img/" + episodio.episode + "/" + episodio.timestamp)" class="card-img-top" alt="Episodio" style="object-fit: cover;">
                                             <div class="card-body">
                                                 <p class="card-text">@frase.quote</p>
-                                                <button type="button" class="btn btn-warning"><i class="bi bi-star"></i></button>
+                                                @if (esFavorito)
+                                                {
+                                                    <button type="button" class="btn btn-success" @onclick="(async () => await BorrarFavorito(frase, episodio, esFavorito))">
+                                                        Favorito Guardado<i class="bi bi-check"></i>
+                                                    </button>
+                                                }
+                                                else
+                                                {
+                                                    <button type="button" class="btn btn-warning" @onclick="(async () => await GuardarFavorito(frase, episodio, esFavorito))">
+                                                        Añadir Favorito<i class="bi bi-star"></i>
+                                                    </button>
+                                                }
                                             </div>
                                         </div>
                                     </div>
@@ -103,7 +123,7 @@
 </div>
 
 @code {
-    public class Personaje
+    public class Frase
     {
         public String? quote { get; set; }
         public String? character { get; set; }
@@ -118,9 +138,17 @@
         public int? timestamp { get; set; }
     }
 
-    List<Personaje>? listaFrases { get; set; }
+    public class FavoritoRequest
+    {
+        public String? Texto { get; set; }
+        public String? Personaje { get; set; }
+        public Episodio? Episodio { get; set; }
+        public int? IdUsuario { get; set; }
+    }
+
+    List<Frase>? listaFrases { get; set; }
     List<Episodio>? listaEpisodios { get; set; }
-    Personaje? frase { get; set; }
+    Frase? frase { get; set; }
 
     String? nombrePersonaje { get; set; }
     int cantidadFrase = 1;
@@ -132,14 +160,23 @@
     private bool ocultarLoader { get; set; } = true;
     private bool primerInicio { get; set; } = true;
 
-    IEnumerable<IGrouping<string?, Personaje>> frasesAgrupadas = Enumerable.Empty<IGrouping<string?, Personaje>>();
+    Dictionary<string, FavoritoInfo> estadoFavoritos = new Dictionary<string, FavoritoInfo>();
+
+    public class FavoritoInfo
+    {
+        public bool EsFavorito { get; set; }
+        public int IdFavorito { get; set; }
+    }
+
+    IEnumerable<IGrouping<string?, Frase>> frasesAgrupadas = Enumerable.Empty<IGrouping<string?, Frase>>();
 
     protected override async Task OnInitializedAsync()
     {
         await ObtenerGif();
+        await CargarFavoritos();
     }
 
-    async Task ObtenerGif()
+    protected async Task ObtenerGif()
     {
         var response = await Http.GetStringAsync("https://api.giphy.com/v1/gifs/random?api_key=FAp8LREU0hvkH0DdmwSu2T2qcqUB12hl&tag=los+simpsons&rating=g");
         if (response != null)
@@ -170,11 +207,11 @@
 
         if (cantidadFrase == 1)
         {
-            listaFrases = await Http.GetFromJsonAsync<List<Personaje>>("https://thesimpsonsquoteapi.glitch.me/quotes?character=" + nombrePersonaje);
+            listaFrases = await Http.GetFromJsonAsync<List<Frase>>("https://thesimpsonsquoteapi.glitch.me/quotes?character=" + nombrePersonaje);
         }
         else if (cantidadFrase > 1)
         {
-            listaFrases = await Http.GetFromJsonAsync<List<Personaje>>("https://thesimpsonsquoteapi.glitch.me/quotes?count=" + cantidadFrase + "&character=" + nombrePersonaje);
+            listaFrases = await Http.GetFromJsonAsync<List<Frase>>("https://thesimpsonsquoteapi.glitch.me/quotes?count=" + cantidadFrase + "&character=" + nombrePersonaje);
         }
         cantidadInvalida = false;
 
@@ -201,9 +238,9 @@
                 listaEpisodios.Add(primerEpisodio);
             }
         }
-        
+
         frasesAgrupadas = listaFrases.GroupBy(q => q.character);
-        
+
         ocultarLoader = true;
         primerInicio = false;
 
@@ -214,7 +251,7 @@
     {
         ocultarLoader = false;
 
-        listaFrases = await Http.GetFromJsonAsync<List<Personaje>>("https://thesimpsonsquoteapi.glitch.me/quotes");
+        listaFrases = await Http.GetFromJsonAsync<List<Frase>>("https://thesimpsonsquoteapi.glitch.me/quotes");
         frase = listaFrases?.FirstOrDefault();
         listaEpisodios = null;
 
@@ -241,20 +278,97 @@
         _navigationManager.NavigateTo("simpson");
     }
 
-    public async Task<List<Episodio>> ObtenerEpisodios(string query)
-    {
-        var resultado = await Http.GetFromJsonAsync<List<Episodio>>(query);
-
-        // Verificar si resultado es nulo y devolver una lista vacía en su lugar
-        return resultado ?? new List<Episodio>();
-    }
-    public async Task<Episodio?> ObtenerEpisodio(string query)
+    protected async Task<Episodio?> ObtenerEpisodio(string query)
     {
         var episodios = await Http.GetFromJsonAsync<List<Episodio>>(query);
 
         var resultado = episodios?.FirstOrDefault();
 
-        // Verificar si resultado es nulo y devolver una lista vacía en su lugar
         return resultado;
+    }
+
+    protected async Task CargarFavoritos()
+    {
+        try
+        {
+            var response = await _fraseServicio.ObtenerFrasesDelUsuario(1);
+
+            foreach(FraseDTO fraseFav in response)
+            {
+                estadoFavoritos[fraseFav.Texto] = new FavoritoInfo
+                {
+                        EsFavorito = true,
+                        IdFavorito = fraseFav.Id
+                };
+            }
+
+            _toastServicio.ShowSuccess("Se cargaron tus favoritos.");
+        }
+        catch
+        {
+            _toastServicio.ShowError("No se pudieron cargar frases favoritas.");
+        }
+    }
+
+    protected async Task GuardarFavorito(Frase fraseFavorita, Episodio episodioFraseFavorita, bool esFavorito)
+    {
+        if (!esFavorito)
+        {
+            if (fraseFavorita != null)
+            {
+                var favoritoDTO = new FraseDTO
+                    {
+                        Texto = fraseFavorita.quote,
+                        Personaje = fraseFavorita.character,
+                        Episodio = episodioFraseFavorita.episode,
+                        IdUsuario = 1
+                    };
+
+                try
+                {
+                    var response = await _fraseServicio.AgregarFrase(favoritoDTO);
+                    estadoFavoritos[fraseFavorita.quote] = new FavoritoInfo
+                    {
+                        EsFavorito = true,
+                        IdFavorito = response
+                    };
+
+                    _toastServicio.ShowSuccess("Se agregó a favoritos.");
+                }
+                catch
+                {
+                    _toastServicio.ShowError("No se pudo agregar a favoritos. Intente más tarde.");
+                }
+            }
+        }
+    }
+
+    protected async Task BorrarFavorito(Frase fraseFavorita, Episodio episodioFraseFavorita, bool esFavorito)
+    {
+        if (esFavorito)
+        {
+            if (fraseFavorita != null)
+            {
+                var favoritoDTO = new FraseDTO
+                    {
+                        Texto = fraseFavorita.quote,
+                        Personaje = fraseFavorita.character,
+                        Episodio = episodioFraseFavorita.episode,
+                        IdUsuario = 1
+                    };
+
+                try
+                {
+                    var response = await _fraseServicio.EliminarFrase(estadoFavoritos[fraseFavorita.quote].IdFavorito);
+                    estadoFavoritos[fraseFavorita.quote].EsFavorito = false;
+
+                    _toastServicio.ShowSuccess("Se eliminó de favoritos.");
+                }
+                catch
+                {
+                    _toastServicio.ShowError("No se pudo eliminar de favoritos. Intente más tarde.");
+                }
+            }
+        }
     }
 }

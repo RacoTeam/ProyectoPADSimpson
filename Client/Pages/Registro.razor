@@ -7,7 +7,14 @@
 
 @inject IUsuarioServicio _usuarioServicio
 @inject NavigationManager _navServicio
-@inject IToastService toastServicio
+@inject IToastService _toastServicio
+
+<style>
+    body {
+        background: rgb(9,141,227);
+        background: linear-gradient(180deg, rgba(9,141,227,1) 0%, rgba(91,160,187,1) 100%);
+    }
+</style>
 
  <div class="container">
     <div class="row justify-content-center">
@@ -16,39 +23,37 @@
                 <div class="card-header"><h3 class="text-center font-weight-light my-4">Crear Cuenta</h3></div>
                 <div class="card-body">
 
-
                     <EditForm Model="usuario" OnValidSubmit="OnValidSubmit">
                     <DataAnnotationsValidator></DataAnnotationsValidator>
-
+                        
                         <div class="form-floating mb-3">
-                            <input class="form-control" id="inputEmail" placeholder="username" @bind-value="usuario.Username" autocomplete="off"/>
-            
-                            <label for="inputEmail">Nombre de Usuario</label>
+                            <label for="username">Nombre de Usuario</label>
+                            <InputText id="username" type="text" class="form-control" placeholder="Nombre de usuario" autocomplete="off" @bind-Value="usuario.Username"></InputText>
+                            <ValidationMessage For="@(() => usuario.Username)"></ValidationMessage>
                         </div>
 
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <div class="form-floating mb-3 mb-md-0">
-                                    <input class="form-control" id="inputPassword" type="password" placeholder="Create a password" @bind-value="usuario.Password" autocomplete="off" />
                                     <label for="inputPassword">Contraseña</label>
+                                    <InputText id="inputPassword" type="password" class="form-control" placeholder="Contraseña" autocomplete="off" @bind-Value="usuario.Password"></InputText>
+                                    <ValidationMessage For="@(() => usuario.Username)"></ValidationMessage>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating mb-3 mb-md-0">
-                                <input class="form-control" id="inputPasswordConfirm" type="password" placeholder="Confirm password" @bind-value="confirmarPassword" autocomplete="off" />
+                                    <input class="form-control" id="inputPasswordConfirm" type="password" placeholder="Confirmar contraseña" @bind-value="confirmarPassword" autocomplete="off" />
                                     <label for="inputPasswordConfirm">Confirmar Contraseña</label>
                                 </div>
                             </div>
                         </div>
                         <div class="mt-4 mb-0">
-                            <div class="d-grid"><button class="btn btn-primary btn-block" type="submit">Registrarse</button></div>
+                            <div class="d-grid"><button class="btn btn-primary btn-block" type="submit" disabled="@esDisabled">Registrarse</button></div>
                         </div>
                     </EditForm>
-
-
                 </div>
                 <div class="card-footer text-center py-3">
-                    <div class="small"><a href="/login">Tienes una cuenta? Ir a login</a></div>
+                    <div class="small"><a href="/login">Ya tienes una cuenta? Inicia sesión</a></div>
                 </div>
             </div>
         </div>
@@ -56,42 +61,46 @@
 </div >
 
 @code {
+    protected String confirmarPassword = "";
 
-    String confirmarPassword = "";
+    protected string titulo = "Guardar Usuario";
+    protected string btnTexto = "Nuevo Usuario";
 
-    [Parameter]
-    public int idUsuarioEditar { get; set; } = 0;
+    protected UsuarioDTO usuario = new UsuarioDTO();
 
-
-    string titulo = "Guardar Usuario";
-    string btnTexto = "Nuevo Usuario";
-
-    UsuarioDTO usuario = new UsuarioDTO();
+    protected bool esDisabled = false;
 
     private async Task OnValidSubmit()
     {
+        esDisabled = true;
+
         int idDevuelto = 0;
-        
+
         if (usuario.Password != confirmarPassword)
         {
-            toastServicio.ShowWarning("Las contraseñas no coinciden.");
+            _toastServicio.ShowError("Revise que las contraseñas coincidan.");
+            esDisabled = false;
             return;
         }
 
-        idDevuelto = await _usuarioServicio.Guardar(usuario);
-     
-        if (idDevuelto != 0)
+        try
         {
-            toastServicio.ShowSuccess("Su cuenta ha sido creada");
-            _navServicio.NavigateTo("/login");
+            idDevuelto = await _usuarioServicio.Guardar(usuario);
+
+            if (idDevuelto != 0)
+            {
+                _toastServicio.ShowSuccess("Su cuenta ha sido creada");
+                _navServicio.NavigateTo("/login");
+            }
         }
-        else
+        catch
         {
-            toastServicio.ShowError("No se pudo crear su cuenta, intente más tarde");
-        }
+            _toastServicio.ShowError("No se pudo crear su cuenta, intente más tarde");
+        };
 
         // if (idDevuelto != 0)
         //     _navServicio.NavigateTo("/Usuarios");
 
+        esDisabled = false;
     }
 }
