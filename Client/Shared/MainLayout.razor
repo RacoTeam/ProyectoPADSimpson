@@ -55,11 +55,12 @@
     //     return usuarioId;
     // }
 
-    // private async Task CerrarSesion()
-    // {
-    //     // Lógica para cerrar sesión
-    //     await CambiarUsuarioIdEnSesion(0);
-    // }
+    private async Task CerrarSesion()
+    {
+        // Lógica para cerrar sesión
+        await sessionStorage.SetItemAsync("id", 0);
+        await JsRuntime.InvokeVoidAsync("location.reload");
+    }
 
     // private async Task CambiarUsuarioIdEnSesion(int nuevoUsuarioId)
     // {

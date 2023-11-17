@@ -3,7 +3,7 @@
 @using ProyectoPADSimpson.Shared.Models;
 @using ProyectoPADSimpson.Client.Services;
 
-
+@inject IJSRuntime JsRuntime
 @inject IUsuarioServicio _usuarioServicio
 @inject NavigationManager _navServicio
 @inject IToastService toastServicio
@@ -57,6 +57,8 @@
             await sessionStorage.SetItemAsync("id", usuario.Id);
             toastServicio.ShowSuccess("Logeo exitoso");
             _navServicio.NavigateTo("/simpson");
+
+            await JsRuntime.InvokeVoidAsync("location.reload");
         }
 
         // if (idDevuelto != 0)
