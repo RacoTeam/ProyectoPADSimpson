@@ -2,7 +2,7 @@
 using ProyectoPADSimpson.Shared.Models;
 using System.Net.Http.Json;
 
-namespace ProyectoPADSimpson.Client.Servicios
+namespace ProyectoPADSimpson.Client.Services
 {
     public class UsuarioServicio : IUsuarioServicio
     {

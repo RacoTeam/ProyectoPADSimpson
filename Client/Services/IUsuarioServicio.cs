@@ -1,6 +1,6 @@
 ﻿using ProyectoPADSimpson.Shared.Models;
 
-namespace ProyectoPADSimpson.Client.Servicios
+namespace ProyectoPADSimpson.Client.Services
 {
     public interface IUsuarioServicio
     {
