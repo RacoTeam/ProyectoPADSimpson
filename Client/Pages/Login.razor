@@ -9,6 +9,13 @@
 @inject IToastService toastServicio
 @inject Blazored.SessionStorage.ISessionStorageService sessionStorage
 
+<style>
+    body {
+        background: rgb(9,141,227);
+        background: linear-gradient(180deg, rgba(9,141,227,1) 0%, rgba(91,160,187,1) 100%);
+    }
+</style>
+
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-lg-5">
@@ -45,22 +52,26 @@
 
     private async Task OnValidSubmit()
     {
-
-        usuario = await _usuarioServicio.Buscar(usuario);
-
-        if (usuario is null )
+        try
         {
-            toastServicio.ShowError("No se pudo crear su cuenta, intente más tarde");
+            usuario = await _usuarioServicio.Buscar(usuario);
+            if (usuario is null)
+            {
+                toastServicio.ShowError("No se encuentra al usuario, registrese y vuelva a intentar.");
+            }
+            else
+            {
+                await sessionStorage.SetItemAsync("id", usuario.Id);
+                toastServicio.ShowSuccess("Inicio exitoso.");
+                _navServicio.NavigateTo("/simpson");
+                await JsRuntime.InvokeVoidAsync("location.reload");
+            }
         }
-        else
+        catch
         {
-            await sessionStorage.SetItemAsync("id", usuario.Id);
-            toastServicio.ShowSuccess("Logeo exitoso");
-            _navServicio.NavigateTo("/simpson");
-
-            await JsRuntime.InvokeVoidAsync("location.reload");
+            toastServicio.ShowError("Usuario o contraseña incorrecta.");
         }
-
+        
         // if (idDevuelto != 0)
         //     _navServicio.NavigateTo("/Usuarios");
 
