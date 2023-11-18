@@ -9,9 +9,10 @@
 
 <style>
     body {
-        background: rgb(9,141,227);
         background: linear-gradient(180deg, rgba(9,141,227,1) 0%, rgba(91,160,187,1) 100%);
         color: white;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
     }
 </style>
 
@@ -40,12 +41,11 @@
 else
 {
     <table class="table table-striped align-middle table-bordered" hidden="@estaOculta">
-        <thead class="table-success">
+        <thead class="table-warning">
             <tr>
                 <th>Frase</th>
                 <th>Personaje</th>
                 <th>Capítulo</th>
-                <th>Usuario</th>
                 <th>Acción</th>
             </tr>
         </thead>
@@ -56,7 +56,6 @@ else
                     <td>@Frase.Texto</td>
                     <td>@Frase.Personaje</td>
                     <td>@Frase.Episodio</td>
-                    <td>@Frase.IdUsuario</td>
                     <td>
                         <a href='/Frase/delete/@Frase.Id' class="btn btn-outline-danger" role="button">
                             Eliminar
