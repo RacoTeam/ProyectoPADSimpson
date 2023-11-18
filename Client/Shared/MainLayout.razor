@@ -51,25 +51,10 @@
        // usuarioId = await ObtenerUsuarioIdDesdeSesion();
     }
 
-    // private async Task<int> ObtenerUsuarioIdDesdeSesion()
-    // {
-    //     var usuarioId = await JsRuntime.InvokeAsync<int>("obtenerUsuarioIdDesdeSesion");
-    //     return usuarioId;
-    // }
-
     private async Task CerrarSesion()
     {
         // Lógica para cerrar sesión
         await sessionStorage.ClearAsync();
         await JsRuntime.InvokeVoidAsync("location.reload");
     }
-
-    // private async Task CambiarUsuarioIdEnSesion(int nuevoUsuarioId)
-    // {
-    //     await JsRuntime.InvokeAsync<object>("cambiarUsuarioIdEnSesion", nuevoUsuarioId);
-    //     usuarioId = nuevoUsuarioId;
-    //     await InvokeAsync(StateHasChanged); // Actualiza la interfaz de usuario
-    // }
-
-    
 }

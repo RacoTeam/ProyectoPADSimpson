@@ -12,13 +12,15 @@
     body {
         background: rgb(9,141,227);
         background: linear-gradient(180deg, rgba(9,141,227,1) 0%, rgba(91,160,187,1) 100%);
+        background-repeat: no-repeat;
+        background-attachment: fixed;
     }
 </style>
 
 <h2>Eliminar frase</h2>
 <br />
 <div class="form-group">
-    <h4>Quieres eliminar la frase?</h4>
+    <h4>¿Quieres eliminar la frase?</h4>
     <table class="table">
         <tbody>
             <tr>
@@ -46,8 +48,8 @@
 </div>
 
 <div class="form-group">
-    <input type="submit" value="Delete" @onclick="(async () => await RemoveFrase(Frase.Id))" class="btn btn-danger" />
-    <input type="submit" value="Cancel" @onclick="(() => Cancel())" class="btn btn-warning" />
+    <input type="submit" value="Eliminar" @onclick="(async () => await RemoveFrase(Frase.Id))" class="btn btn-danger" />
+    <input type="submit" value="Cancelar" @onclick="(() => Cancel())" class="btn btn-warning" />
 </div>
 
 @code {

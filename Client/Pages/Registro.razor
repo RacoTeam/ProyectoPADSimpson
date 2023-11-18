@@ -13,6 +13,8 @@
     body {
         background: rgb(9,141,227);
         background: linear-gradient(180deg, rgba(9,141,227,1) 0%, rgba(91,160,187,1) 100%);
+        background-repeat: no-repeat;
+        background-attachment: fixed;
     }
 </style>
 
@@ -27,16 +29,16 @@
                     <DataAnnotationsValidator></DataAnnotationsValidator>
                         
                         <div class="form-floating mb-3">
-                            <label for="username">Nombre de Usuario</label>
                             <InputText id="username" type="text" class="form-control" placeholder="Nombre de usuario" autocomplete="off" @bind-Value="usuario.Username"></InputText>
+                            <label for="username">Nombre de Usuario</label>
                             <ValidationMessage For="@(() => usuario.Username)"></ValidationMessage>
                         </div>
 
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <div class="form-floating mb-3 mb-md-0">
-                                    <label for="inputPassword">Contraseña</label>
                                     <InputText id="inputPassword" type="password" class="form-control" placeholder="Contraseña" autocomplete="off" @bind-Value="usuario.Password"></InputText>
+                                    <label for="inputPassword">Contraseña</label>
                                     <ValidationMessage For="@(() => usuario.Username)"></ValidationMessage>
                                 </div>
                             </div>
