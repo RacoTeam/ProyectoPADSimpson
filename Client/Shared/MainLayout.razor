@@ -10,7 +10,7 @@
     </div>
 
     <main>
-        <div class="top-row px-4">
+        @* <div class="top-row px-4">
             <a href="aboutus">Nosotros</a>
             @if (usuarioId == 0)
             {
@@ -20,7 +20,7 @@
             {
                 <a href="#" @onclick="CerrarSesion">Cerrar Sesión</a>
             }
-        </div>
+        </div> *@
 
         <article class="content px-4">
             @Body
@@ -32,6 +32,7 @@
     Timeout="5"
     ShowProgressBar="true"
     RemoveToastsOnNavigation="false"
+    MaxToastCount="3"
     IconType="Blazored.Toast.Configuration.IconType.FontAwesome"
     SuccessClass="success-toast-override"
     SuccessIcon="fa fa-thumbs-up"
@@ -40,21 +41,3 @@
     InfoIcon="fa fa-warning">
 
 </BlazoredToasts>
-
-@code {
-    private int usuarioId;
-
-    protected override async Task OnInitializedAsync()
-    {
-        await base.OnInitializedAsync();
-        usuarioId = await sessionStorage.GetItemAsync<int>("id");
-       // usuarioId = await ObtenerUsuarioIdDesdeSesion();
-    }
-
-    private async Task CerrarSesion()
-    {
-        // Lógica para cerrar sesión
-        await sessionStorage.ClearAsync();
-        await JsRuntime.InvokeVoidAsync("location.reload");
-    }
-}

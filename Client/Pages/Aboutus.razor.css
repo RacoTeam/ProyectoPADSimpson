@@ -17,6 +17,11 @@ h4 {
     color: #000;
 }
 
-li > a {
+td {
+    background-color: #FFD700;
+    color: #000;
+}
+
+li > a, td > a {
     color: #000;
 }
