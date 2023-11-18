@@ -17,39 +17,45 @@
     }
 </style>
 
-<h2>Eliminar frase</h2>
-<br />
-<div class="form-group">
-    <h4>¿Quieres eliminar la frase?</h4>
-    <table class="table">
-        <tbody>
-            <tr>
-                <td>Id</td>
-                <td>@Frase.Id</td>
-            </tr>
-            <tr>
-                <td>Texto</td>
-                <td>@Frase.Texto</td>
-            </tr>
-            <tr>
-                <td>Personaje</td>
-                <td>@Frase.Personaje</td>
-            </tr>
-            <tr>
-                <td>Capitulo</td>
-                <td>@Frase.Episodio</td>
-            </tr>
-            <tr>
-                <td>IdUsuario</td>
-                <td>@Frase.IdUsuario</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+<div class="container mt-6">
+    <div class="card">
+        <div class="card-header Title">
+            <h2 class="section-title">Eliminar frase</h2>
+            <p>Aqui puedes ver tus frases guardadas y eliminarlas.</p>
+        </div>
 
-<div class="form-group">
-    <input type="submit" value="Eliminar" @onclick="(async () => await RemoveFrase(Frase.Id))" class="btn btn-danger" />
-    <input type="submit" value="Cancelar" @onclick="(() => Cancel())" class="btn btn-warning" />
+        <div class="card-body">
+            <div class="form-group">
+                <h4>¿Quieres eliminar la frase?</h4>
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <td>Id</td>
+                            <td>@Frase.Id</td>
+                        </tr>
+                        <tr>
+                            <td>Texto</td>
+                            <td>@Frase.Texto</td>
+                        </tr>
+                        <tr>
+                            <td>Personaje</td>
+                            <td>@Frase.Personaje</td>
+                        </tr>
+                        <tr>
+                            <td>Capitulo</td>
+                            <td>@Frase.Episodio</td>
+                        </tr>
+                        <tr>
+                            <td>IdUsuario</td>
+                            <td>@Frase.IdUsuario</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <input type="submit" value="Eliminar" @onclick="(async () => await RemoveFrase(Frase.Id))" class="btn btn-danger" />
+                <input type="submit" value="Cancelar" @onclick="(() => Cancel())" class="btn btn-warning" />
+            </div>
+        </div>
+    </div>
 </div>
 
 @code {

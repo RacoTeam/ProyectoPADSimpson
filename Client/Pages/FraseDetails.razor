@@ -16,57 +16,70 @@
     }
 </style>
 
-<h1 class="Title">Frases Favoritas</h1>
-<p>Aquí puedes ver tus frases guardadas y eliminarlas.</p>
-<div class="row" hidden="@estaOculta">
-    <div class="input-group col">
-        <input type="text" class="form-control" placeholder="Buscar frase por texto"
-        @bind="SearchString" @bind:event="oninput" @onkeyup="FilterFrase" />
-        @if (SearchString.Length > 0)
-        {
-            <div class="input-group-append">
-                <button class="btn btn-danger" @onclick="ResetSearch">
-                    <i class="bi bi-x"></i>
-                </button>
+<div class="container mt-6">
+    <div class="card">
+        <div class="card-header Title">
+            <h2 class="section-title">Frases Favoritas</h2>
+            <p>Aqui puedes ver tus frases guardadas y eliminarlas.</p>
+        </div>
+
+        <div class="card-body">
+
+            <div class="row" hidden="@estaOculta">
+                <div class="input-group col">
+                    <input type="text" class="form-control" placeholder="Buscar frase por texto"
+                    @bind="SearchString" @bind:event="oninput" @onkeyup="FilterFrase" />
+                    @if (SearchString.Length > 0)
+                    {
+                        <div class="input-group-append">
+                            <button class="btn btn-danger" @onclick="ResetSearch">
+                                <i class="bi bi-x"></i>
+                            </button>
+                        </div>
+                    }
+                </div>
             </div>
-        }
+            <br />
+        
+            @if (!FraseList.Any())
+            {
+                <br />
+                <p style="color:black"><em>@estado</em></p>
+            }
+            else
+            {
+                <table class="table table-striped align-middle table-bordered" hidden="@estaOculta">
+                    <thead class="table-warning">
+                        <tr>
+                            <th>Frase</th>
+                            <th>Personaje</th>
+                            <th>Capítulo</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var Frase in FraseList)
+                        {
+                            <tr>
+                                <td>@Frase.Texto</td>
+                                <td>@Frase.Personaje</td>
+                                <td>@Frase.Episodio</td>
+                                <td>
+                                    <a href='/Frase/delete/@Frase.Id' class="btn btn-outline-danger" role="button">
+                                        Eliminar
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+
+                </table>
+            }
+
+        </div>
     </div>
 </div>
-<br />
 
-@if (!FraseList.Any())
-{
-    <p><em>@estado</em></p>
-}
-else
-{
-    <table class="table table-striped align-middle table-bordered" hidden="@estaOculta">
-        <thead class="table-warning">
-            <tr>
-                <th>Frase</th>
-                <th>Personaje</th>
-                <th>Capítulo</th>
-                <th>Acción</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var Frase in FraseList)
-            {
-                <tr>
-                    <td>@Frase.Texto</td>
-                    <td>@Frase.Personaje</td>
-                    <td>@Frase.Episodio</td>
-                    <td>
-                        <a href='/Frase/delete/@Frase.Id' class="btn btn-outline-danger" role="button">
-                            Eliminar
-                        </a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-
-    </table>
-}
 
 @code {
     protected List<FraseDTO> FraseList = new();
