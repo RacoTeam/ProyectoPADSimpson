@@ -31,7 +31,8 @@ Desarrollado por:
 - [Emanuel Haro](https://github.com/EmanuelHaro)
 - [Santiago Figueroa](https://github.com/SantiFigueroa00)
 - [Maribel Masucci](https://github.com/maribelmasucci)
-- 
+
+
 ---
 
 ¡Disfruta de Frases Simpsonianas y diviértete explorando las citas de Los Simpson!
