@@ -25,7 +25,8 @@ https://frasessimpsonianas.azurewebsites.net/
 <img src="repo/screenshot-08.jpeg" width="700">
 
 ## 📖 Nosotros
-Proyecto desarrollado para la materia Programación de Aplicaciones Distribuidas de 4to año en UTN-FRT por:
+Proyecto desarrollado para la materia Programación de Aplicaciones Distribuidas de 4to año en la UTN-FRT.
+Desarrollado por:
 - [Lucas Depetris](https://github.com/lucasdepetrisd)
 - [Emanuel Haro](https://github.com/EmanuelHaro)
 - [Santiago Figueroa](https://github.com/SantiFigueroa00)
